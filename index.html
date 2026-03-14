@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PM KISAN – Registration Form</title>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+Bhai+2:wght@500;700;800&family=Mukta:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --g1: #0d3b1e;
+  --g2: #1b5e20;
+  --g3: #2e7d32;
+  --g4: #43a047;
+  --saffron: #e65100;
+  --gold: #f9a825;
+  --cream: #fffde7;
+  --white: #ffffff;
+}
+
+body {
+  font-family: 'Mukta', sans-serif;
+  background: #f0f4f0;
+  min-height: 100vh;
+}
+
+/* ── ANIMATED BG ── */
+.bg-wrap {
+  position: fixed; inset: 0; z-index: -1;
+  background: linear-gradient(160deg, #0d3b1e 0%, #1b5e20 35%, #2e7d32 65%, #1a6b3a 100%);
+  overflow: hidden;
+}
+.bg-wrap::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: 
+    radial-gradient(ellipse at 20% 20%, rgba(249,168,37,0.15) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 80%, rgba(67,160,71,0.2) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 0%, rgba(255,255,255,0.05) 0%, transparent 40%);
+}
+.bg-pattern {
+  position: absolute; inset: 0; opacity: 0.04;
+  background-image: url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='1'%3E%3Cpath d='M40 0C17.9 0 0 17.9 0 40s17.9 40 40 40 40-17.9 40-40S62.1 0 40 0zm0 72C22.4 72 8 57.6 8 40S22.4 8 40 8s32 14.4 32 32-14.4 32-32 32z'/%3E%3C/g%3E%3C/svg%3E");
+}
+
+/* ── FLOATING ELEMENTS ── */
+.floater {
+  position: fixed;
+  font-size: 28px;
+  opacity: 0.08;
+  animation: floatUp linear infinite;
+  pointer-events: none;
+  z-index: 0;
+}
+@keyframes floatUp {
+  0%   { transform: translateY(110vh) rotate(0deg); opacity: 0; }
+  10%  { opacity: 0.08; }
+  90%  { opacity: 0.08; }
+  100% { transform: translateY(-100px) rotate(360deg); opacity: 0; }
+}
+
+/* ── HEADER ── */
+.header {
+  position: relative; z-index: 1;
+  padding: 0 20px;
+}
+.header-inner {
+  max-width: 780px; margin: 0 auto;
+  padding: 32px 0 28px;
+  text-align: center;
+}
+.header-badge {
+  display: inline-flex; align-items: center; gap: 10px;
+  background: rgba(255,255,255,0.12);
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 50px; padding: 8px 20px;
+  margin-bottom: 20px;
+  backdrop-filter: blur(10px);
+  animation: fadeDown 0.6s ease both;
+}
+.header-badge span { font-size: 13px; color: rgba(255,255,255,0.9); font-weight: 600; letter-spacing: 0.5px; }
+
+.emblem-wrap {
+  display: inline-block;
+  animation: fadeDown 0.7s 0.1s ease both;
+  margin-bottom: 16px;
+}
+.emblem-circle {
+  width: 90px; height: 90px;
+  background: linear-gradient(135deg, rgba(255,255,255,0.25), rgba(255,255,255,0.1));
+  border: 2px solid rgba(255,255,255,0.3);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 44px; margin: 0 auto;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.3);
+  animation: pulseGlow 3s ease-in-out infinite;
+}
+@keyframes pulseGlow {
+  0%,100% { box-shadow: 0 8px 32px rgba(0,0,0,0.2), 0 0 0 0 rgba(249,168,37,0.3); }
+  50%      { box-shadow: 0 8px 32px rgba(0,0,0,0.2), 0 0 0 12px rgba(249,168,37,0); }
+}
+
+.header h1 {
+  font-family: 'Baloo Bhai 2', cursive;
+  font-size: 32px; font-weight: 800;
+  color: white;
+  text-shadow: 0 2px 12px rgba(0,0,0,0.3);
+  letter-spacing: 0.5px;
+  animation: fadeDown 0.7s 0.2s ease both;
+  margin-bottom: 8px;
+}
+.header-sub {
+  font-size: 14px; color: rgba(255,255,255,0.8);
+  animation: fadeDown 0.7s 0.3s ease both;
+  margin-bottom: 24px;
+}
+
+/* TRICOLOR BAR */
+.tricolor {
+  display: flex; height: 5px; border-radius: 3px; overflow: hidden;
+  max-width: 200px; margin: 0 auto 28px;
+  animation: fadeDown 0.7s 0.4s ease both;
+}
+.tricolor div:nth-child(1) { flex: 1; background: #ff9933; }
+.tricolor div:nth-child(2) { flex: 1; background: white; }
+.tricolor div:nth-child(3) { flex: 1; background: #138808; }
+
+/* INFO CARDS */
+.info-row {
+  display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;
+  margin-bottom: 28px;
+  animation: fadeDown 0.7s 0.5s ease both;
+}
+.info-chip {
+  display: flex; align-items: center; gap: 8px;
+  background: rgba(255,255,255,0.12);
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 50px; padding: 8px 16px;
+  backdrop-filter: blur(8px);
+  color: white; font-size: 13px; font-weight: 600;
+}
+
+@keyframes fadeDown {
+  from { opacity: 0; transform: translateY(-20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── FORM WRAPPER ── */
+.form-section {
+  position: relative; z-index: 1;
+  max-width: 780px; margin: 0 auto;
+  padding: 0 20px 60px;
+  animation: fadeUp 0.8s 0.4s ease both;
+}
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.form-card {
+  background: white;
+  border-radius: 24px;
+  overflow: hidden;
+  box-shadow:
+    0 24px 64px rgba(0,0,0,0.25),
+    0 0 0 1px rgba(255,255,255,0.1);
+}
+
+.form-card-header {
+  background: linear-gradient(135deg, var(--g1), var(--g2));
+  padding: 24px 32px;
+  display: flex; align-items: center; gap: 16px;
+  position: relative; overflow: hidden;
+}
+.form-card-header::after {
+  content: '';
+  position: absolute; bottom: 0; left: 0; right: 0; height: 3px;
+  background: linear-gradient(90deg, var(--saffron), var(--gold), var(--g4), var(--g3));
+}
+.form-card-header .fh-icon {
+  width: 52px; height: 52px;
+  background: rgba(255,255,255,0.15);
+  border-radius: 14px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 26px; flex-shrink: 0;
+  border: 1px solid rgba(255,255,255,0.2);
+}
+.form-card-header h2 {
+  font-family: 'Baloo Bhai 2', cursive;
+  font-size: 20px; font-weight: 800; color: white;
+  line-height: 1.2;
+}
+.form-card-header p { font-size: 13px; color: rgba(255,255,255,0.75); margin-top: 3px; }
+
+.form-body {
+  padding: 32px;
+  min-height: 400px;
+}
+
+/* ── STEPS ── */
+.steps-row {
+  display: flex; gap: 0; margin-bottom: 28px;
+  border-radius: 12px; overflow: hidden;
+  border: 1px solid #e8f5e9;
+}
+.step-item {
+  flex: 1; display: flex; align-items: center; gap: 10px;
+  padding: 12px 16px; background: #f9fdf9;
+  border-right: 1px solid #e8f5e9; font-size: 13px; color: #555;
+}
+.step-item:last-child { border-right: none; }
+.step-num {
+  width: 26px; height: 26px; border-radius: 50%;
+  background: var(--g3); color: white;
+  font-size: 12px; font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.step-text { font-size: 12px; font-weight: 600; color: #3a5a3a; line-height: 1.3; }
+
+/* JOTFORM EMBED */
+.jotform-wrap {
+  min-height: 500px;
+}
+
+/* ── FOOTER ── */
+.site-footer {
+  position: relative; z-index: 1;
+  text-align: center;
+  padding: 20px;
+  color: rgba(255,255,255,0.6);
+  font-size: 12px;
+}
+.site-footer a { color: rgba(255,255,255,0.8); text-decoration: none; }
+
+/* ── SIDE DECORATION ── */
+.side-deco {
+  position: fixed; right: 20px; top: 50%; transform: translateY(-50%);
+  display: flex; flex-direction: column; gap: 12px; z-index: 1;
+}
+.deco-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: rgba(255,255,255,0.3);
+  transition: all 0.3s;
+}
+.deco-dot.active { background: var(--gold); transform: scale(1.4); }
+
+@media (max-width: 600px) {
+  .header h1 { font-size: 24px; }
+  .info-row { gap: 8px; }
+  .info-chip { font-size: 12px; padding: 6px 12px; }
+  .steps-row { flex-direction: column; border-radius: 12px; }
+  .step-item { border-right: none; border-bottom: 1px solid #e8f5e9; }
+  .step-item:last-child { border-bottom: none; }
+  .form-body { padding: 20px 16px; }
+  .form-card-header { padding: 18px 20px; }
+  .side-deco { display: none; }
+}
+
+  /* ── NOTICE BANNER ── */
+  .notice-wrap {
+    position: relative; z-index: 1;
+    max-width: 780px; margin: 0 auto 20px;
+    padding: 0 20px;
+    animation: fadeDown 0.6s 0.3s ease both;
+  }
+  .notice-card {
+    background: linear-gradient(135deg, #fff8e1, #fff3e0);
+    border: 2px solid #f9a825;
+    border-left: 6px solid #e65100;
+    border-radius: 18px;
+    padding: 24px 28px;
+    box-shadow: 0 8px 32px rgba(230,81,0,0.15);
+    position: relative; overflow: hidden;
+  }
+  .notice-card::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 3px;
+    background: linear-gradient(90deg, #e65100, #f9a825, #e65100);
+  }
+  .notice-top {
+    display: flex; align-items: center; gap: 12px; margin-bottom: 16px;
+  }
+  .notice-icon {
+    width: 44px; height: 44px; flex-shrink: 0;
+    background: linear-gradient(135deg, #e65100, #f9a825);
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px;
+    box-shadow: 0 4px 12px rgba(230,81,0,0.3);
+  }
+  .notice-label {
+    font-family: 'Baloo Bhai 2', cursive;
+    font-size: 13px; font-weight: 800;
+    color: #e65100; letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+  .notice-date {
+    font-size: 12px; color: #999; margin-top: 2px;
+    font-weight: 600;
+  }
+  .notice-main {
+    font-family: 'Baloo Bhai 2', cursive;
+    font-size: 20px; font-weight: 800;
+    color: #b71c1c; line-height: 1.5;
+    margin-bottom: 14px;
+  }
+  .notice-divider {
+    height: 1px; background: linear-gradient(90deg, #f9a825, transparent);
+    margin-bottom: 14px;
+  }
+  .notice-sub {
+    font-size: 14px; color: #5d4037;
+    line-height: 1.8; font-weight: 500;
+  }
+  .notice-sub strong { color: #b71c1c; font-weight: 800; }
+  .notice-pulse {
+    position: absolute; top: 16px; right: 16px;
+    width: 12px; height: 12px; border-radius: 50%;
+    background: #e65100;
+    box-shadow: 0 0 0 0 rgba(230,81,0,0.4);
+    animation: noticePulse 1.5s infinite;
+  }
+  @keyframes noticePulse {
+    0%   { box-shadow: 0 0 0 0 rgba(230,81,0,0.4); }
+    70%  { box-shadow: 0 0 0 10px rgba(230,81,0,0); }
+    100% { box-shadow: 0 0 0 0 rgba(230,81,0,0); }
+  }
+
+</style>
+</head>
+<body>
+
+<!-- BG -->
+<div class="bg-wrap">
+  <div class="bg-pattern"></div>
+</div>
+
+<!-- FLOATING EMOJIS -->
+<div class="floater" style="left:5%;animation-duration:12s;animation-delay:0s;">🌾</div>
+<div class="floater" style="left:15%;animation-duration:18s;animation-delay:3s;">🌱</div>
+<div class="floater" style="left:30%;animation-duration:14s;animation-delay:6s;">🚜</div>
+<div class="floater" style="left:55%;animation-duration:16s;animation-delay:2s;">🌿</div>
+<div class="floater" style="left:70%;animation-duration:11s;animation-delay:8s;">🌾</div>
+<div class="floater" style="left:85%;animation-duration:20s;animation-delay:4s;">💧</div>
+<div class="floater" style="left:92%;animation-duration:13s;animation-delay:1s;">🌱</div>
+
+<!-- SIDE DOTS -->
+<div class="side-deco">
+  <div class="deco-dot active"></div>
+  <div class="deco-dot"></div>
+  <div class="deco-dot"></div>
+  <div class="deco-dot"></div>
+</div>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-inner">
+    <div class="header-badge">
+      <span>🇮🇳</span>
+      <span>Government of India — Ministry of Agriculture</span>
+    </div>
+
+    <div class="emblem-wrap">
+      <div class="emblem-circle">🌾</div>
+    </div>
+
+    <h1>PM KISAN SAMMAN NIDHI</h1>
+    <p class="header-sub">प्रधानमंत्री किसान सम्मान निधि योजना | Pradhan Mantri Kisan Samman Nidhi</p>
+
+    <div class="tricolor">
+      <div></div><div></div><div></div>
+    </div>
+
+    <div class="info-row">
+      <div class="info-chip">💰 ₹6,000 Annual Benefit</div>
+      <div class="info-chip">👨‍🌾 Small & Marginal Farmers</div>
+      <div class="info-chip">🆓 Free Registration</div>
+      <div class="info-chip">⚡ Instant Processing</div>
+    </div>
+  </div>
+</div>
+
+
+<!-- NOTICE BANNER -->
+<div class="notice-wrap">
+  <div class="notice-card">
+    <div class="notice-pulse"></div>
+    <div class="notice-top">
+      <div class="notice-icon">📢</div>
+      <div>
+        <div class="notice-label">⚡ Important Notice</div>
+        <div class="notice-date">📅 13 March 2026 &nbsp;|&nbsp; Guwahati, Assam</div>
+      </div>
+    </div>
+    <div class="notice-main">
+      The Hon'ble Prime Minister will release the 22nd Installment of PM-KISAN on 13th March 2026 from Guwahati, Assam.
+    </div>
+    <div class="notice-divider"></div>
+    <div class="notice-sub">
+      ⚠️ <strong>eKYC is MANDATORY</strong> for all PM KISAN Registered Farmers.<br>
+      🔹 OTP Based eKYC is available on <strong>PMKISAN Portal</strong><br>
+      🔹 Nearest <strong>CSC Centres</strong> may be contacted for <strong>Biometric Based eKYC</strong>
+    </div>
+  </div>
+</div>
+
+<!-- FORM -->
+<div class="form-section">
+  <div class="form-card">
+
+    <div class="form-card-header">
+      <div class="fh-icon">📋</div>
+      <div>
+        <h2>Farmer Registration Form</h2>
+        <p>किसान पंजीकरण फॉर्म — Sabhi fields zaroori hain</p>
+      </div>
+    </div>
+
+    <div class="form-body">
+
+      <div class="steps-row">
+        <div class="step-item">
+          <div class="step-num">1</div>
+          <div class="step-text">Personal Details<br>bharein</div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">2</div>
+          <div class="step-text">Land & Bank<br>info dalein</div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">3</div>
+          <div class="step-text">Form<br>Submit karein</div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">4</div>
+          <div class="step-text">Status<br>check karein</div>
+        </div>
+      </div>
+
+      <div class="jotform-wrap">
+        <script type="text/javascript" src="https://form.jotform.com/jsform/251443559302050"></script>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<div class="site-footer">
+  🇮🇳 &nbsp; PM KISAN Samman Nidhi &nbsp;|&nbsp; Government of India &nbsp;|&nbsp;
+  <a href="#">Helpline: 155261</a> &nbsp;|&nbsp;
+  © 2024 Ministry of Agriculture & Farmers Welfare
+</div>
+
+<script>
+// Animate side dots on scroll
+window.addEventListener('scroll', () => {
+  const dots = document.querySelectorAll('.deco-dot');
+  const progress = window.scrollY / (document.body.scrollHeight - window.innerHeight);
+  const active = Math.floor(progress * dots.length);
+  dots.forEach((d, i) => d.classList.toggle('active', i === active));
+});
+</script>
+
+</body>
+</html>
