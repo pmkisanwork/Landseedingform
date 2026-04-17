@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>🌾 Farmer Registry | All Work Online</title>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600;700;800&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --g1:#0d4a1f;--g2:#1a7a35;--g3:#25a84a;--g4:#4ecb6e;
+  --gold:#f0a500;--gold2:#ffd056;
+  --dark:#071510;--navy:#0a1e10;
+  --white:#fff;
+}
+html{scroll-behavior:smooth}
+body{font-family:'Poppins',sans-serif;background:#f0faf4;min-height:100vh}
+
+/* ══ TOP HEADER ══ */
+.top-header{
+  position:sticky;top:0;z-index:100;
+  background:linear-gradient(135deg,#0d3b1e,#1B5E20);
+  border-bottom:3px solid var(--gold);
+  padding:0 20px;
+  box-shadow:0 4px 20px rgba(0,0,0,.25);
+}
+.header-inner{
+  max-width:1200px;margin:0 auto;height:62px;
+  display:flex;align-items:center;justify-content:space-between;gap:14px;
+}
+.logo-area{display:flex;align-items:center;gap:12px}
+.logo-icon{
+  width:42px;height:42px;
+  background:linear-gradient(135deg,var(--gold),var(--gold2));
+  border-radius:11px;display:flex;align-items:center;justify-content:center;
+  font-size:1.3rem;box-shadow:0 4px 14px rgba(240,165,0,.45);flex-shrink:0
+}
+.logo-title{font-family:'Baloo 2',cursive;font-weight:800;font-size:1.25rem;color:#fff}
+.logo-sub{font-size:.65rem;color:rgba(255,255,255,.55);margin-top:1px}
+.header-actions{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.sync-badge{
+  font-size:.68rem;font-weight:600;color:rgba(255,255,255,.8);
+  background:rgba(255,255,255,.12);padding:5px 12px;border-radius:20px;
+  border:1px solid rgba(255,255,255,.2);white-space:nowrap
+}
+.hbtn{
+  display:inline-flex;align-items:center;gap:7px;
+  font-family:'Poppins',sans-serif;font-size:.78rem;font-weight:700;
+  padding:8px 16px;border-radius:9px;cursor:pointer;border:none;
+  transition:all .2s;white-space:nowrap
+}
+.hbtn-refresh{background:rgba(255,255,255,.15);border:1.5px solid rgba(255,255,255,.3)!important;color:#fff}
+.hbtn-refresh:hover{background:rgba(255,255,255,.26)}
+.hbtn-csv{background:rgba(249,168,37,.2);border:1.5px solid rgba(249,168,37,.5)!important;color:#FFD54F}
+.hbtn-csv:hover{background:rgba(249,168,37,.3)}
+.hbtn-back{background:rgba(255,255,255,.1);border:1.5px solid rgba(255,255,255,.22)!important;color:rgba(255,255,255,.8)}
+.hbtn-back:hover{background:rgba(255,255,255,.18);color:#fff}
+
+/* ══ STATS ROW ══ */
+.stats-wrap{background:linear-gradient(135deg,#1B5E20,#2E7D32);padding:18px 20px}
+.stats-inner{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:12px}
+.stat-box{
+  background:rgba(255,255,255,.95);border-radius:13px;padding:14px 16px;
+  text-align:center;box-shadow:0 2px 10px rgba(0,0,0,.1)
+}
+.stat-num{font-family:'Baloo 2',cursive;font-size:1.9rem;font-weight:800;line-height:1}
+.stat-lbl{font-size:.66rem;color:#6b7f6b;font-weight:600;margin-top:4px}
+
+/* ══ SEARCH & FILTER ══ */
+.toolbar-wrap{background:#fff;border-bottom:1px solid #e0f0e0;padding:14px 20px}
+.toolbar-inner{max-width:1200px;margin:0 auto;display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.search-input{
+  flex:1;min-width:200px;padding:10px 16px;
+  border:1.5px solid #c8e6c9;border-radius:9px;
+  font-size:.85rem;font-family:'Poppins',sans-serif;outline:none;
+  color:#1a2e1a;background:#f4fbf5;transition:all .2s
+}
+.search-input:focus{border-color:#25a84a;box-shadow:0 0 0 3px rgba(37,168,74,.1)}
+.filter-select{
+  padding:10px 14px;border:1.5px solid #c8e6c9;border-radius:9px;
+  font-size:.85rem;font-family:'Poppins',sans-serif;outline:none;
+  color:#1a2e1a;background:#f4fbf5;cursor:pointer
+}
+.result-count{font-size:.75rem;color:#6b8f6b;font-weight:600;margin-left:auto;white-space:nowrap}
+
+/* ══ TABLE ══ */
+.table-wrap{max-width:1200px;margin:20px auto;padding:0 16px 40px}
+.table-card{background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,.08);border:1px solid #e0f0e0}
+.table-scroll{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:12px;font-family:'Poppins',sans-serif}
+thead tr{background:linear-gradient(135deg,#1B5E20,#2E7D32)}
+th{color:#fff;font-weight:700;padding:13px 14px;text-align:left;white-space:nowrap;font-size:11.5px}
+tbody tr{border-bottom:1px solid #e8f5e9;transition:background .15s}
+tbody tr:hover{background:#f4fbf5}
+tbody tr:last-child{border-bottom:none}
+td{padding:12px 14px;vertical-align:middle}
+
+.no-data{text-align:center;padding:50px 20px;color:#6b7f6b}
+.no-data .icon{font-size:3rem;margin-bottom:12px}
+.no-data .msg{font-size:.88rem;font-weight:600}
+
+/* Status dropdown */
+.status-sel{
+  padding:5px 10px;border-radius:7px;font-size:11px;
+  font-family:'Poppins',sans-serif;outline:none;font-weight:700;cursor:pointer;
+  border-width:2px;border-style:solid
+}
+
+/* Action buttons */
+.act-btn{border-radius:6px;padding:5px 9px;font-size:11px;cursor:pointer;font-weight:700;border:1px solid;transition:all .15s}
+.act-btn:hover{transform:scale(1.08)}
+
+/* ══ MODALS ══ */
+.modal-overlay{
+  display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);
+  z-index:9999;align-items:center;justify-content:center;
+  padding:16px;backdrop-filter:blur(8px)
+}
+.modal-overlay.open{display:flex}
+.modal-box{
+  background:#fff;border-radius:18px;padding:26px;
+  width:100%;max-width:420px;
+  box-shadow:0 20px 60px rgba(0,0,0,.3);
+  font-family:'Poppins',sans-serif;
+  animation:mIn .3s ease both
+}
+.modal-box-wide{max-width:500px;max-height:90vh;overflow-y:auto}
+@keyframes mIn{from{opacity:0;transform:translateY(-14px) scale(.97)}to{opacity:1;transform:translateY(0) scale(1)}}
+.modal-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.modal-title{font-size:1rem;font-weight:800;color:#0d4a1f}
+.modal-close{background:none;border:none;font-size:1.2rem;cursor:pointer;color:#888;transition:color .2s}
+.modal-close:hover{color:#c62828}
+
+/* ══ TOAST ══ */
+.toast{
+  position:fixed;bottom:24px;left:50%;
+  transform:translateX(-50%) translateY(80px);
+  background:#0d2e15;border:1px solid rgba(255,255,255,.12);
+  border-radius:12px;padding:12px 22px;font-size:.82rem;font-weight:500;
+  white-space:nowrap;z-index:99999;
+  transition:transform .35s cubic-bezier(.34,1.56,.64,1);
+  box-shadow:0 8px 28px rgba(0,0,0,.4);color:#fff;font-family:'Poppins',sans-serif
+}
+.toast.show{transform:translateX(-50%) translateY(0)}
+.toast.ok{border-color:rgba(78,203,110,.4);color:#4ecb6e}
+.toast.fail{border-color:rgba(255,82,82,.4);color:#ff5252}
+
+@media(max-width:600px){
+  .logo-title{font-size:1rem}
+  .header-actions{gap:7px}
+  .hbtn{padding:7px 11px;font-size:.72rem}
+  .stats-inner{grid-template-columns:repeat(2,1fr)}
+}
+</style>
+</head>
+<body>
+
+<!-- ══ TOP HEADER ══ -->
+<header class="top-header">
+  <div class="header-inner">
+    <div class="logo-area">
+      <div class="logo-icon">🌾</div>
+      <div>
+        <div class="logo-title">Farmer Registry</div>
+        <div class="logo-sub">All Work Online — Admin Panel</div>
+      </div>
+    </div>
+    <div class="header-actions">
+      <span class="sync-badge" id="fr-sync-status">⏳ Loading...</span>
+      <button class="hbtn hbtn-refresh" onclick="frLoadData()">🔄 Refresh</button>
+      <button class="hbtn hbtn-csv" onclick="frExportCSV()">⬇️ CSV Export</button>
+      <button class="hbtn hbtn-back" onclick="window.close()">✕ Band Karein</button>
+    </div>
+  </div>
+</header>
+
+<!-- ══ STATS ══ -->
+<div class="stats-wrap">
+  <div class="stats-inner">
+    <div class="stat-box">
+      <div class="stat-num" style="color:#1B5E20" id="fr-total">0</div>
+      <div class="stat-lbl">📋 Total Forms</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-num" style="color:#1565C0" id="fr-new">0</div>
+      <div class="stat-lbl">🆕 New</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-num" style="color:#c07800" id="fr-pending">0</div>
+      <div class="stat-lbl">⏳ Pending</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-num" style="color:#00796B" id="fr-done">0</div>
+      <div class="stat-lbl">✅ Done</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ TOOLBAR ══ -->
+<div class="toolbar-wrap">
+  <div class="toolbar-inner">
+    <input type="text" class="search-input" id="fr-search" placeholder="🔍 Naam ya mobile number se search karein..." oninput="frRenderTable()"/>
+    <select class="filter-select" id="fr-filter" onchange="frRenderTable()">
+      <option value="All">Sabhi Status</option>
+      <option value="New">🆕 New</option>
+      <option value="Done">✅ Done</option>
+      <option value="Pending">⏳ Pending</option>
+    </select>
+    <span class="result-count" id="fr-result-count">0 records</span>
+  </div>
+</div>
+
+<!-- ══ TABLE ══ -->
+<div class="table-wrap">
+  <div class="table-card">
+    <div class="table-scroll">
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>👤 Naam</th>
+            <th>📱 Mobile</th>
+            <th>🪪 Aadhaar</th>
+            <th>🔧 Seva</th>
+            <th>💳 UTR</th>
+            <th>📅 Tarikh</th>
+            <th>📊 Status</th>
+            <th>💬 Remark</th>
+            <th>⚙️ Action</th>
+          </tr>
+        </thead>
+        <tbody id="fr-table-body">
+          <tr><td colspan="10" class="no-data"><div class="icon">🔄</div><div class="msg">Data load ho raha hai...</div></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div id="fr-no-data" style="display:none" class="no-data">
+      <div class="icon">📋</div>
+      <div class="msg">Abhi koi Farmer Registry form submit nahi hua hai।</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ REMARK MODAL ══ -->
+<div class="modal-overlay" id="fr-remark-modal">
+  <div class="modal-box">
+    <div class="modal-head">
+      <h3 class="modal-title">📝 Remark Update</h3>
+      <button class="modal-close" onclick="frCloseRemark()">✕</button>
+    </div>
+    <div id="fr-remark-name" style="font-size:.78rem;color:#6b7f6b;margin-bottom:12px;background:#f4fbf5;padding:9px 12px;border-radius:8px"></div>
+    <textarea id="fr-remark-txt" rows="4" placeholder="Remark ya note likhhein..."
+      style="width:100%;padding:11px 13px;border:2px solid #C8E6C9;border-radius:10px;font-size:.87rem;font-family:'Poppins',sans-serif;outline:none;resize:vertical;transition:border .2s"
+      onfocus="this.style.borderColor='#25a84a'" onblur="this.style.borderColor='#C8E6C9'"></textarea>
+    <div style="display:flex;gap:10px;margin-top:12px">
+      <button onclick="frSaveRemark()" style="flex:1;padding:11px;background:linear-gradient(135deg,#1B5E20,#2E7D32);color:#fff;border:none;border-radius:10px;font-size:.9rem;font-weight:700;cursor:pointer;font-family:'Poppins',sans-serif">💾 Save</button>
+      <button onclick="frCloseRemark()" style="flex:1;padding:11px;background:#f0f0f0;color:#555;border:none;border-radius:10px;font-size:.9rem;font-weight:700;cursor:pointer;font-family:'Poppins',sans-serif">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ DETAIL MODAL ══ -->
+<div class="modal-overlay" id="fr-detail-modal">
+  <div class="modal-box modal-box-wide">
+    <div class="modal-head">
+      <h3 class="modal-title">📋 Farmer Registry Detail</h3>
+      <button class="modal-close" onclick="frCloseDetail()">✕</button>
+    </div>
+    <div id="fr-detail-content"></div>
+    <button onclick="frCloseDetail()" style="width:100%;margin-top:16px;padding:11px;background:linear-gradient(135deg,#1B5E20,#2E7D32);color:#fff;border:none;border-radius:10px;font-size:.9rem;font-weight:700;cursor:pointer;font-family:'Poppins',sans-serif">Band Karein</button>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+const FR_BIN_ID  = '69ba7978c3097a1dd536d863';
+const FR_BIN_KEY = '$2a$10$yN0HYHeVAablf.1euvFDXu4CYAyG4E2ta9FQUi7mxFa/Zpp6Z22Va';
+const FR_BIN_API = `https://api.jsonbin.io/v3/b/${FR_BIN_ID}`;
+const FR_LOCAL   = 'farmer_submissions';
+
+let frData = [];
+let _frRemarkId = null;
+
+// ── Toast ──
+function showToast(msg, type='ok') {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.className = 'toast ' + type;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+// ── Sync Status ──
+function frSetSync(msg) {
+  const el = document.getElementById('fr-sync-status');
+  if (el) el.textContent = msg;
+}
+
+// ── Load Data ──
+async function frLoadData() {
+  frSetSync('⏳ Loading...');
+  try {
+    const res = await fetch(FR_BIN_API + '/latest', {
+      headers: { 'X-Master-Key': FR_BIN_KEY, 'X-Bin-Meta': 'false' }
+    });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const data = await res.json();
+    frData = (data && data.submissions) ? data.submissions : [];
+    localStorage.setItem(FR_LOCAL, JSON.stringify(frData));
+    frSetSync('✅ Synced — ' + new Date().toLocaleTimeString('hi-IN'));
+    showToast('✅ Data load ho gaya — ' + frData.length + ' records', 'ok');
+  } catch(e) {
+    const raw = localStorage.getItem(FR_LOCAL);
+    frData = raw ? JSON.parse(raw) : [];
+    frSetSync('📱 Local (' + e.message + ')');
+    showToast('⚠️ Local data dikh raha hai', 'fail');
+  }
+  frRenderTable();
+  frUpdateStats();
+}
+
+// ── Stats ──
+function frUpdateStats() {
+  document.getElementById('fr-total').textContent   = frData.length;
+  document.getElementById('fr-new').textContent     = frData.filter(s => s.status === 'New').length;
+  document.getElementById('fr-pending').textContent = frData.filter(s => s.status === 'Pending').length;
+  document.getElementById('fr-done').textContent    = frData.filter(s => s.status === 'Done').length;
+}
+
+// ── Render Table ──
+function frRenderTable() {
+  const search = (document.getElementById('fr-search')?.value || '').toLowerCase();
+  const filter = document.getElementById('fr-filter')?.value || 'All';
+  const tbody  = document.getElementById('fr-table-body');
+  const noData = document.getElementById('fr-no-data');
+  const countEl= document.getElementById('fr-result-count');
+  if (!tbody) return;
+
+  let list = frData.filter(s => {
+    const matchFilter = filter === 'All' || s.status === filter;
+    const matchSearch = !search ||
+      (s.name||'').toLowerCase().includes(search) ||
+      (s.mobile||'').includes(search);
+    return matchFilter && matchSearch;
+  });
+
+  if (countEl) countEl.textContent = list.length + ' record' + (list.length !== 1 ? 's' : '');
+
+  if (!list.length) {
+    tbody.innerHTML = '';
+    if (noData) noData.style.display = 'block';
+    return;
+  }
+  if (noData) noData.style.display = 'none';
+
+  const statusColors = { New: '#1565C0', Done: '#00796B', Pending: '#c07800' };
+  const statusBg     = { New: '#E3F2FD', Done: '#E0F2F1', Pending: '#FFF8E1' };
+
+  tbody.innerHTML = list.map((s, i) => {
+    const col = statusColors[s.status] || '#888';
+    const bg  = statusBg[s.status]  || '#f5f5f5';
+    const aadhaarFmt = (s.aadhaar||'').replace(/(\d{4})(\d{4})(\d{4})/, '$1 $2 $3');
+    return `<tr>
+      <td style="color:#9b9b9b;font-size:11px">${i+1}</td>
+      <td>
+        <div style="font-weight:700;font-size:13px;color:#0d4a1f">${s.name||'—'}</div>
+        <div style="font-size:10px;color:#9b9b9b;margin-top:2px">${s.khatauni||''}</div>
+      </td>
+      <td><a href="tel:${s.mobile}" style="color:#1565C0;font-weight:700;font-size:13px;text-decoration:none">${s.mobile||'—'}</a></td>
+      <td style="font-size:12px;color:#444;white-space:nowrap">${aadhaarFmt||'—'}</td>
+      <td style="font-size:11px;color:#0d4a1f;max-width:140px">${s.service||'—'}</td>
+      <td style="font-size:11px;color:#444">${s.utr||'—'}</td>
+      <td style="font-size:10px;color:#9b9b9b;white-space:nowrap">${s.date||'—'}</td>
+      <td>
+        <select class="status-sel" onchange="frQuickStatus(${s.id}, this.value)"
+          style="border-color:${col};background:${bg};color:${col}">
+          <option ${s.status==='New'?'selected':''} style="background:#fff;color:#1565C0">🆕 New</option>
+          <option ${s.status==='Done'?'selected':''} style="background:#fff;color:#00796B">✅ Done</option>
+          <option ${s.status==='Pending'?'selected':''} style="background:#fff;color:#c07800">⏳ Pending</option>
+        </select>
+      </td>
+      <td style="font-size:11px;color:${s.remark?'#1B5E20':'#bbb'};max-width:110px;word-break:break-word">${s.remark||'<em>—</em>'}</td>
+      <td>
+        <div style="display:flex;gap:5px;flex-wrap:wrap">
+          <button class="act-btn" onclick="frOpenRemark(${s.id})" title="Remark"
+            style="background:#E8F5E9;border-color:#A5D6A7;color:#1B5E20">📝</button>
+          <button class="act-btn" onclick="frShowDetail(${s.id})" title="Detail"
+            style="background:#E3F2FD;border-color:#90CAF9;color:#1565C0">👁️</button>
+          <button class="act-btn" onclick="frDelete(${s.id})" title="Delete"
+            style="background:#FFEBEE;border-color:#EF9A9A;color:#C62828">🗑️</button>
+        </div>
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+// ── Quick Status ──
+async function frQuickStatus(id, newStatus) {
+  frData = frData.map(s => s.id === id ? {...s, status: newStatus} : s);
+  await frSaveToCloud();
+  frUpdateStats();
+  showToast('✅ Status update ho gaya', 'ok');
+}
+
+// ── Save to Cloud ──
+async function frSaveToCloud() {
+  try {
+    const getRes = await fetch(FR_BIN_API + '/latest', {
+      headers: { 'X-Master-Key': FR_BIN_KEY, 'X-Bin-Meta': 'false' }
+    });
+    let existing = {};
+    if (getRes.ok) existing = await getRes.json();
+    await fetch(FR_BIN_API, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json', 'X-Master-Key': FR_BIN_KEY, 'X-Bin-Versioning': 'false' },
+      body: JSON.stringify({ ...existing, submissions: frData })
+    });
+    frSetSync('✅ Saved');
+    localStorage.setItem(FR_LOCAL, JSON.stringify(frData));
+  } catch(e) {
+    frSetSync('❌ Save failed');
+  }
+}
+
+// ── Delete ──
+async function frDelete(id) {
+  if (!confirm('Kya aap is entry ko delete karna chahte hain?')) return;
+  frData = frData.filter(s => s.id !== id);
+  await frSaveToCloud();
+  frRenderTable();
+  frUpdateStats();
+  showToast('🗑️ Entry delete ho gayi', 'fail');
+}
+
+// ── Remark Modal ──
+function frOpenRemark(id) {
+  const s = frData.find(s => s.id === id);
+  if (!s) return;
+  _frRemarkId = id;
+  document.getElementById('fr-remark-name').textContent = '👤 ' + s.name + '  |  📱 ' + s.mobile;
+  document.getElementById('fr-remark-txt').value = s.remark || '';
+  document.getElementById('fr-remark-modal').classList.add('open');
+}
+function frCloseRemark() {
+  document.getElementById('fr-remark-modal').classList.remove('open');
+  _frRemarkId = null;
+}
+async function frSaveRemark() {
+  if (!_frRemarkId) return;
+  const remark = document.getElementById('fr-remark-txt').value.trim();
+  frData = frData.map(s => s.id === _frRemarkId ? {...s, remark} : s);
+  await frSaveToCloud();
+  frRenderTable();
+  frCloseRemark();
+  showToast('💾 Remark save ho gaya', 'ok');
+}
+
+// ── Detail Modal ──
+function frShowDetail(id) {
+  const s = frData.find(s => s.id === id);
+  if (!s) return;
+  const aadhaarFmt = (s.aadhaar||'').replace(/(\d{4})(\d{4})(\d{4})/, '$1 $2 $3');
+  const statusColors = { New: '#1565C0', Done: '#00796B', Pending: '#c07800' };
+  const col = statusColors[s.status] || '#888';
+  document.getElementById('fr-detail-content').innerHTML = `
+    <div style="display:flex;flex-direction:column;gap:8px">
+      ${[
+        ['🔧 Seva', s.service],
+        ['👤 Kisan Naam', s.name],
+        ['🪪 Aadhaar', aadhaarFmt],
+        ['📱 Mobile', `<a href="tel:${s.mobile}" style="color:#1565C0;font-weight:700">${s.mobile}</a>`],
+        ['💳 UTR Number', s.utr],
+        ['📄 Khatauni', s.khatauni||'—'],
+        ['📊 Status', `<strong style="color:${col}">${s.status}</strong>`],
+        ['💬 Remark', s.remark||'—'],
+        ['📅 Submit Tarikh', s.date],
+      ].map(([k,v]) => `
+        <div style="display:flex;gap:8px;padding:10px 12px;background:#f4fbf5;border-radius:9px;border:1px solid #e0f0e0">
+          <div style="min-width:130px;font-size:11px;font-weight:700;color:#6b7f6b">${k}</div>
+          <div style="font-size:12px;font-weight:600;color:#0d4a1f;word-break:break-all">${v}</div>
+        </div>`).join('')}
+    </div>`;
+  document.getElementById('fr-detail-modal').classList.add('open');
+}
+function frCloseDetail() {
+  document.getElementById('fr-detail-modal').classList.remove('open');
+}
+
+// ── CSV Export ──
+function frExportCSV() {
+  if (!frData.length) { showToast('Koi data nahi hai।', 'fail'); return; }
+  const headers = ['Naam','Mobile','Aadhaar','Seva','UTR','Khatauni','Status','Remark','Tarikh'];
+  const rows = frData.map(s =>
+    [s.name,s.mobile,s.aadhaar,s.service,s.utr,s.khatauni||'',s.status,s.remark||'',s.date]
+    .map(v => `"${(v||'').toString().replace(/"/g,'""')}"`).join(',')
+  );
+  const csv = [headers.join(','), ...rows].join('\n');
+  const a = document.createElement('a');
+  a.href = 'data:text/csv;charset=utf-8,\uFEFF' + encodeURIComponent(csv);
+  a.download = 'farmer-registry-' + new Date().toISOString().split('T')[0] + '.csv';
+  a.click();
+  showToast('⬇️ CSV download ho raha hai', 'ok');
+}
+
+// ── Close overlay on backdrop click ──
+document.querySelectorAll('.modal-overlay').forEach(el => {
+  el.addEventListener('click', e => { if (e.target === el) el.classList.remove('open'); });
+});
+
+// ── Auto Load ──
+window.addEventListener('load', frLoadData);
+</script>
+</body>
+</html>
