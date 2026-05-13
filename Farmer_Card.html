@@ -1,0 +1,2563 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>All Work Online - Farmer ID Card Generator</title>
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;600;700&family=Oswald:wght@400;500;600;700&family=Barlow+Condensed:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+
+
+  :root {
+    --green-dark: #0d4f1c;
+    --green-mid: #1a7a30;
+    --green-light: #28a745;
+    --green-pale: #eaf5ea;
+    --gold: #f0b429;
+    --gold-dark: #c8840b;
+    --white: #ffffff;
+    --text-dark: #0d1f0d;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Barlow Condensed', 'Noto Sans Devanagari', sans-serif;
+    background: linear-gradient(145deg, #071a09 0%, #0d4f1c 45%, #071a09 100%);
+    min-height: 100vh;
+    padding: 20px;
+    color: var(--text-dark);
+  }
+
+  .company-header {
+    text-align: center;
+    margin-bottom: 10px;
+  }
+  .company-name {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(255,255,255,0.1);
+    border: 1.5px solid rgba(240,180,41,0.5);
+    border-radius: 50px;
+    padding: 6px 20px;
+    margin-bottom: 6px;
+  }
+  .alw-logo-header {
+    width: 32px; height: 32px;
+    background: linear-gradient(135deg, #f0b429, #c8840b);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Oswald', sans-serif;
+    font-size: 0.65rem;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: 0.5px;
+    flex-shrink: 0;
+    box-shadow: 0 2px 8px rgba(240,180,41,0.4);
+  }
+  .company-name-text {
+    color: #fff;
+    font-family: 'Oswald', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+  }
+  .company-name-text span { color: var(--gold); }
+
+  h1.page-title {
+    text-align: center;
+    color: #fff;
+    font-family: 'Oswald', sans-serif;
+    font-size: 1.8rem;
+    font-weight: 700;
+    letter-spacing: 3px;
+    margin-bottom: 4px;
+    text-shadow: 0 2px 12px rgba(0,0,0,0.5);
+    text-transform: uppercase;
+  }
+  .page-subtitle {
+    text-align: center;
+    color: #81c784;
+    font-size: 0.9rem;
+    margin-bottom: 24px;
+    letter-spacing: 1.5px;
+  }
+
+  .container { max-width: 900px; margin: 0 auto; }
+
+  .form-section {
+    background: rgba(255,255,255,0.96);
+    border-radius: 14px;
+    padding: 22px 26px;
+    margin-bottom: 22px;
+    box-shadow: 0 6px 28px rgba(0,0,0,0.3);
+    border: 1.5px solid rgba(40,167,69,0.3);
+  }
+  .form-section h2 {
+    color: var(--green-dark);
+    font-family: 'Oswald', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 600;
+    border-left: 4px solid var(--gold);
+    padding-left: 10px;
+    margin-bottom: 16px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 14px;
+  }
+  .form-group { display: flex; flex-direction: column; gap: 4px; }
+  .form-group.full-width { grid-column: 1 / -1; }
+
+  label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--green-dark);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  input, select, textarea {
+    border: 1.5px solid #b2dfb2;
+    border-radius: 6px;
+    padding: 8px 10px;
+    font-size: 0.9rem;
+    font-family: inherit;
+    color: var(--text-dark);
+    background: var(--green-pale);
+    transition: border-color 0.2s, box-shadow 0.2s;
+    outline: none;
+  }
+  input:focus, select:focus, textarea:focus {
+    border-color: var(--green-mid);
+    box-shadow: 0 0 0 3px rgba(26,122,48,0.15);
+    background: #fff;
+  }
+
+  .photo-upload-area {
+    border: 2px dashed var(--green-mid);
+    border-radius: 8px;
+    padding: 14px;
+    text-align: center;
+    background: var(--green-pale);
+    cursor: pointer;
+    position: relative;
+  }
+  .photo-upload-area input[type="file"] {
+    position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%;
+  }
+  .photo-upload-area .upload-icon { font-size: 1.6rem; display: block; margin-bottom: 4px; }
+  .photo-upload-area p { font-size: 0.75rem; color: var(--green-dark); font-weight: 600; }
+  #photo-preview {
+    width: 70px; height: 80px; object-fit: cover;
+    border-radius: 5px; border: 2px solid var(--green-mid);
+    display: none; margin: 5px auto 0;
+  }
+
+  .generate-btn {
+    display: block;
+    margin: 18px auto 0;
+    padding: 12px 44px;
+    background: linear-gradient(135deg, var(--green-dark), var(--green-mid));
+    color: #fff;
+    border: none;
+    border-radius: 50px;
+    font-family: 'Oswald', sans-serif;
+    font-size: 1rem;
+    font-weight: 600;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    cursor: pointer;
+    box-shadow: 0 4px 18px rgba(13,79,28,0.5);
+    transition: transform 0.15s, box-shadow 0.15s;
+  }
+  .generate-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 28px rgba(13,79,28,0.6);
+  }
+
+  /* ===== CARD PREVIEW SECTION ===== */
+  #card-preview-section {
+    display: none;
+    animation: fadeIn 0.5s ease;
+  }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+  .card-preview-title {
+    color: #e8f5e9;
+    text-align: center;
+    font-family: 'Oswald', sans-serif;
+    font-size: 1rem;
+    margin-bottom: 16px;
+    letter-spacing: 2px;
+    font-weight: 500;
+    text-transform: uppercase;
+  }
+
+  .cards-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+  }
+
+  /* =============================================
+     PVC CARD: Standard Credit Card = 85.6 x 54 mm
+     At 96dpi: 85.6mm = 323px, 54mm = 204px
+     ============================================= */
+  .pvc-card {
+    width: 323px;
+    height: 204px;
+    border-radius: 10px;
+    overflow: hidden;
+    position: relative;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.45), 0 2px 6px rgba(0,0,0,0.2);
+    flex-shrink: 0;
+  }
+
+  /* ===== FRONT CARD ===== */
+  #card-front {
+    background: linear-gradient(160deg, #f8fdf8 0%, #ffffff 50%, #f0faf0 100%);
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Decorative pattern overlay */
+  #card-front::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: repeating-linear-gradient(
+      45deg,
+      transparent,
+      transparent 14px,
+      rgba(40,167,69,0.03) 14px,
+      rgba(40,167,69,0.03) 15px
+    );
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* Green accent strip on left */
+  #card-front::after {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 4px;
+    background: linear-gradient(180deg, var(--green-mid), var(--green-dark), var(--green-mid));
+    z-index: 1;
+  }
+
+  .front-header {
+    background: linear-gradient(90deg, #0a3d14 0%, #1a7a30 50%, #0a3d14 100%);
+    padding: 5px 8px 5px 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+    z-index: 2;
+  }
+
+  .front-logo-area {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  .logo-emblem {
+    width: 26px; height: 26px;
+    background: linear-gradient(135deg, #2ecc71, #27ae60);
+    border-radius: 50% 0 50% 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    border: 1.5px solid rgba(255,255,255,0.35);
+    flex-shrink: 0;
+  }
+
+  .brand-text {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.1;
+  }
+  .brand-name {
+    color: #fff;
+    font-family: 'Oswald', sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+  }
+  .brand-name span { color: var(--gold); }
+  .brand-sub {
+    color: rgba(165,214,167,0.9);
+    font-size: 0.42rem;
+    letter-spacing: 0.5px;
+    font-weight: 400;
+  }
+
+  .front-title-block {
+    text-align: right;
+  }
+  .card-type-hi {
+    color: var(--gold);
+    font-family: 'Noto Sans Devanagari', sans-serif;
+    font-size: 0.62rem;
+    font-weight: 700;
+    line-height: 1.2;
+  }
+  .card-type-en {
+    color: rgba(255,255,255,0.8);
+    font-size: 0.5rem;
+    letter-spacing: 0.5px;
+  }
+
+  /* GOV STRIP */
+  .gov-strip {
+    background: linear-gradient(90deg, #e8f5e9, #f1f8f1, #e8f5e9);
+    border-left: 3px solid var(--green-mid);
+    padding: 2px 8px 2px 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 2;
+    position: relative;
+    border-bottom: 1px solid #c8e6c9;
+  }
+  .gov-strip-text {
+    color: var(--green-dark);
+    font-size: 0.42rem;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    font-weight: 600;
+  }
+  .gov-strip-right {
+    color: var(--green-mid);
+    font-family: 'Oswald', sans-serif;
+    font-size: 0.5rem;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+  }
+
+  .front-body {
+    flex: 1;
+    display: flex;
+    gap: 8px;
+    padding: 7px 8px 7px 12px;
+    position: relative;
+    z-index: 2;
+    background: transparent;
+  }
+
+  .photo-col {
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .front-photo {
+    width: 56px;
+    height: 66px;
+    object-fit: cover;
+    border-radius: 4px;
+    border: 2px solid var(--green-mid);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    display: none;
+  }
+  .front-photo-placeholder {
+    width: 56px;
+    height: 66px;
+    background: linear-gradient(135deg, #c8e6c9, #a5d6a7);
+    border-radius: 4px;
+    border: 2px solid var(--green-mid);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.6rem;
+  }
+
+  .info-col {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .farmer-name-en {
+    color: var(--green-dark);
+    font-family: 'Oswald', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    line-height: 1.1;
+    text-transform: uppercase;
+  }
+  .farmer-name-hi {
+    color: var(--green-mid);
+    font-family: 'Noto Sans Devanagari', sans-serif;
+    font-size: 0.62rem;
+    font-weight: 600;
+    margin-bottom: 3px;
+    line-height: 1.2;
+  }
+
+  .f-row {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    line-height: 1.15;
+  }
+  .f-label {
+    color: var(--green-dark);
+    font-size: 0.48rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    white-space: nowrap;
+  }
+  .f-val {
+    color: #1a3a1a;
+    font-size: 0.52rem;
+    font-weight: 500;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .qr-col {
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 2px;
+  }
+  .front-qr {
+    width: 46px; height: 46px;
+    background: #fff;
+    border-radius: 3px;
+    border: 1px solid #c8e6c9;
+    padding: 1px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .front-qr canvas { width: 44px !important; height: 44px !important; }
+  .front-qr img { width: 44px !important; height: 44px !important; }
+  .qr-label {
+    color: #888;
+    font-size: 0.38rem;
+    letter-spacing: 0.5px;
+    text-align: center;
+  }
+
+  .front-footer {
+    background: linear-gradient(90deg, #0a3d14 0%, #1a7a30 50%, #0a3d14 100%);
+    padding: 4px 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+    z-index: 2;
+  }
+  .footer-id {
+    color: var(--gold);
+    font-family: 'Oswald', sans-serif;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+  }
+  .footer-label {
+    color: rgba(255,255,255,0.6);
+    font-size: 0.42rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .alw-logo-seal {
+    width: 34px; height: 34px;
+    background: radial-gradient(circle at 40% 35%, #f5c842, #c8840b);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid rgba(255,255,255,0.6);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.4), inset 0 1px 2px rgba(255,255,255,0.3);
+    flex-shrink: 0;
+  }
+  .alw-logo-seal .alw-text {
+    font-family: 'Oswald', sans-serif;
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: 1px;
+    line-height: 1;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.5);
+  }
+
+  /* ===== BACK CARD ===== */
+  #card-back {
+    background: linear-gradient(160deg, #f8fdf8 0%, #ffffff 50%, #f0faf0 100%);
+    display: flex;
+    flex-direction: column;
+  }
+
+  #card-back::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: repeating-linear-gradient(
+      45deg,
+      transparent,
+      transparent 14px,
+      rgba(40,167,69,0.03) 14px,
+      rgba(40,167,69,0.03) 15px
+    );
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .back-header {
+    background: linear-gradient(90deg, #0a3d14 0%, #1a7a30 50%, #0a3d14 100%);
+    padding: 5px 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+    z-index: 2;
+  }
+  .back-header-left {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+  }
+  .back-header-label {
+    color: rgba(255,255,255,0.7);
+    font-size: 0.42rem;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+  }
+  .enrollment-id-val {
+    color: var(--gold);
+    font-family: 'Oswald', sans-serif;
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+  }
+
+  .back-header-right {
+    text-align: right;
+  }
+  .back-brand {
+    color: #fff;
+    font-family: 'Oswald', sans-serif;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+  }
+  .back-brand span { color: var(--gold); }
+  .back-brand-sub {
+    color: rgba(165,214,167,0.7);
+    font-size: 0.38rem;
+  }
+
+  .back-body {
+    flex: 1;
+    padding: 6px 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    position: relative;
+    z-index: 2;
+  }
+
+  .addr-block {
+    background: linear-gradient(90deg, #e8f5e9, #f1f8f1);
+    border-left: 3px solid var(--green-mid);
+    border-radius: 0 4px 4px 0;
+    padding: 4px 6px;
+  }
+  .addr-title {
+    color: var(--green-dark);
+    font-size: 0.46rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 2px;
+  }
+  .addr-val {
+    color: #2a4a2a;
+    font-size: 0.5rem;
+    line-height: 1.3;
+    font-weight: 500;
+  }
+
+  .land-title {
+    color: var(--green-dark);
+    font-family: 'Oswald', sans-serif;
+    font-size: 0.58rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-bottom: 1.5px solid var(--green-light);
+    padding-bottom: 2px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .land-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, var(--green-mid), transparent);
+  }
+
+  .land-tbl {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.42rem;
+  }
+  .land-tbl th {
+    background: var(--green-dark);
+    color: #fff;
+    padding: 2.5px 2px;
+    text-align: center;
+    font-weight: 600;
+    letter-spacing: 0.2px;
+    font-size: 0.4rem;
+    line-height: 1.2;
+  }
+  .land-tbl td {
+    border: 0.5px solid #c8e6c9;
+    padding: 2px 2px;
+    text-align: center;
+    color: #1a3a1a;
+    font-size: 0.42rem;
+    background: #fff;
+    line-height: 1.2;
+  }
+  .land-tbl tr:nth-child(even) td { background: #f0faf0; }
+
+  .annexure-block {
+    background: #f0faf0;
+    border: 0.5px solid #c8e6c9;
+    border-radius: 4px;
+    padding: 4px 6px;
+    font-size: 0.4rem;
+    color: #4a6a4a;
+    line-height: 1.4;
+  }
+  .annexure-block strong {
+    color: var(--green-dark);
+    font-size: 0.46rem;
+    display: block;
+    margin-bottom: 1px;
+  }
+
+  .back-footer {
+    background: linear-gradient(90deg, #0a3d14, #1a7a30, #0a3d14);
+    padding: 3px 8px;
+    text-align: center;
+    position: relative;
+    z-index: 2;
+  }
+  .back-footer-text {
+    color: rgba(255,255,255,0.65);
+    font-size: 0.4rem;
+    letter-spacing: 0.3px;
+    font-style: italic;
+  }
+
+  /* ===== CARD SIZE LABEL ===== */
+  .size-note {
+    color: rgba(165,214,167,0.6);
+    font-size: 0.72rem;
+    text-align: center;
+    margin-top: -8px;
+    margin-bottom: 8px;
+    letter-spacing: 1px;
+  }
+
+  /* DOWNLOAD BTN */
+  .download-btn {
+    display: block;
+    margin: 8px auto 24px;
+    padding: 11px 36px;
+    background: linear-gradient(135deg, var(--gold-dark), var(--gold));
+    color: #fff;
+    border: none;
+    border-radius: 50px;
+    font-family: 'Oswald', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    cursor: pointer;
+    box-shadow: 0 4px 16px rgba(200,132,11,0.45);
+    transition: transform 0.15s;
+  }
+  .download-btn:hover { transform: translateY(-2px); }
+
+  @media (max-width: 600px) {
+    .form-grid { grid-template-columns: 1fr; }
+    .form-section { padding: 16px 14px; }
+    .pvc-card { transform: scale(0.92); transform-origin: center top; }
+  }
+
+  /* ===== AUTH PAGES ===== */
+  #auth-page {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 20px;
+  }
+  .auth-box {
+    background: rgba(255,255,255,0.97);
+    border-radius: 18px;
+    padding: 36px 32px 28px;
+    width: 100%;
+    max-width: 420px;
+    box-shadow: 0 12px 40px rgba(0,0,0,0.45);
+    border: 1.5px solid rgba(40,167,69,0.3);
+    text-align: center;
+  }
+  .auth-logo {
+    width: 64px; height: 64px;
+    background: linear-gradient(135deg, #f0b429, #c8840b);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Oswald', sans-serif;
+    font-size: 1.05rem; font-weight: 700; color: #fff;
+    margin: 0 auto 10px;
+    box-shadow: 0 4px 14px rgba(240,180,41,0.5);
+    letter-spacing: 1px;
+  }
+  .auth-brand {
+    font-family: 'Oswald', sans-serif;
+    font-size: 1.2rem; font-weight: 700;
+    color: var(--green-dark);
+    letter-spacing: 2px; text-transform: uppercase;
+    margin-bottom: 3px;
+  }
+  .auth-brand span { color: var(--gold-dark); }
+  .auth-subtitle { font-size: 0.78rem; color: #777; margin-bottom: 22px; }
+  .auth-tabs {
+    display: flex; border-radius: 10px; overflow: hidden;
+    border: 1.5px solid #b2dfb2; margin-bottom: 24px;
+  }
+  .auth-tab {
+    flex: 1; padding: 9px;
+    font-family: 'Oswald', sans-serif;
+    font-size: 0.9rem; font-weight: 600;
+    letter-spacing: 1.5px; text-transform: uppercase;
+    cursor: pointer; border: none; background: #f0f0f0; color: #666;
+    transition: all 0.2s;
+  }
+  .auth-tab.active {
+    background: linear-gradient(135deg, var(--green-dark), var(--green-mid));
+    color: #fff;
+  }
+  .auth-form { }
+  .auth-form.active { }
+  .auth-group { text-align: left; margin-bottom: 14px; }
+  .auth-group label {
+    display: block; font-size: 0.72rem; font-weight: 600;
+    color: var(--green-dark); text-transform: uppercase;
+    letter-spacing: 0.5px; margin-bottom: 4px;
+  }
+  .auth-group input {
+    width: 100%; padding: 10px 12px;
+    border: 1.5px solid #b2dfb2; border-radius: 8px;
+    font-size: 0.92rem; background: var(--green-pale);
+    color: var(--text-dark); outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    font-family: inherit;
+  }
+  .auth-group input:focus {
+    border-color: var(--green-mid);
+    box-shadow: 0 0 0 3px rgba(26,122,48,0.15);
+    background: #fff;
+  }
+  .auth-btn {
+    width: 100%; padding: 11px;
+    background: linear-gradient(135deg, var(--green-dark), var(--green-mid));
+    color: #fff; border: none; border-radius: 50px;
+    font-family: 'Oswald', sans-serif;
+    font-size: 1rem; font-weight: 600;
+    letter-spacing: 2px; text-transform: uppercase;
+    cursor: pointer; margin-top: 6px;
+    box-shadow: 0 4px 18px rgba(13,79,28,0.4);
+    transition: transform 0.15s, box-shadow 0.15s;
+  }
+  .auth-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(13,79,28,0.5); }
+  .auth-msg {
+    font-size: 0.82rem; margin-top: 10px;
+    font-weight: 600; display: none; padding: 8px 12px;
+    border-radius: 6px;
+  }
+  .auth-msg.error { color: #c0392b; background: #fdecea; display: block; }
+  .auth-msg.success { color: #1a7a30; background: #eaf5ea; display: block; }
+  .auth-footer { margin-top: 18px; font-size: 0.72rem; color: #999; }
+
+  /* ===== DASHBOARD ===== */
+  #dashboard-page { display: none; }
+  .dash-header {
+    background: rgba(255,255,255,0.97);
+    border-radius: 14px;
+    padding: 16px 22px;
+    margin-bottom: 20px;
+    display: flex; align-items: center; justify-content: space-between;
+    flex-wrap: wrap; gap: 12px;
+    box-shadow: 0 4px 18px rgba(0,0,0,0.2);
+    border: 1.5px solid rgba(40,167,69,0.25);
+  }
+  .dash-user-info { display: flex; align-items: center; gap: 12px; }
+  .dash-avatar {
+    width: 46px; height: 46px;
+    background: linear-gradient(135deg, #f0b429, #c8840b);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Oswald', sans-serif;
+    font-size: 1rem; font-weight: 700; color: #fff;
+    box-shadow: 0 3px 10px rgba(240,180,41,0.4);
+    letter-spacing: 1px;
+  }
+  .dash-welcome { font-family: 'Oswald', sans-serif; }
+  .dash-welcome .greet { font-size: 0.75rem; color: #888; letter-spacing: 1px; text-transform: uppercase; }
+  .dash-welcome .uname { font-size: 1.1rem; font-weight: 700; color: var(--green-dark); letter-spacing: 1px; }
+  .dash-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+  .dash-btn {
+    padding: 8px 18px; border-radius: 50px; border: none;
+    font-family: 'Oswald', sans-serif;
+    font-size: 0.82rem; font-weight: 600;
+    letter-spacing: 1.5px; text-transform: uppercase;
+    cursor: pointer; transition: transform 0.15s;
+  }
+  .dash-btn:hover { transform: translateY(-2px); }
+  .dash-btn.primary {
+    background: linear-gradient(135deg, var(--green-dark), var(--green-mid));
+    color: #fff;
+    box-shadow: 0 3px 12px rgba(13,79,28,0.35);
+  }
+  .dash-btn.danger {
+    background: linear-gradient(135deg, #c0392b, #e74c3c);
+    color: #fff;
+    box-shadow: 0 3px 12px rgba(192,57,43,0.35);
+  }
+
+  /* Stats cards */
+  .dash-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 14px;
+    margin-bottom: 22px;
+  }
+  .stat-card {
+    background: rgba(255,255,255,0.97);
+    border-radius: 12px;
+    padding: 18px 16px;
+    text-align: center;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+    border: 1.5px solid rgba(40,167,69,0.2);
+  }
+  .stat-icon { font-size: 1.8rem; margin-bottom: 6px; }
+  .stat-value {
+    font-family: 'Oswald', sans-serif;
+    font-size: 1.8rem; font-weight: 700;
+    color: var(--green-dark); line-height: 1;
+  }
+  .stat-label { font-size: 0.72rem; color: #777; margin-top: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
+
+  /* Card History Table */
+  .dash-section-title {
+    color: #e8f5e9;
+    font-family: 'Oswald', sans-serif;
+    font-size: 1rem; font-weight: 600;
+    letter-spacing: 2px; text-transform: uppercase;
+    margin-bottom: 12px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .history-wrap {
+    background: rgba(255,255,255,0.97);
+    border-radius: 14px;
+    padding: 20px;
+    box-shadow: 0 6px 24px rgba(0,0,0,0.2);
+    border: 1.5px solid rgba(40,167,69,0.25);
+    margin-bottom: 22px;
+    overflow-x: auto;
+  }
+  .history-empty {
+    text-align: center; padding: 32px;
+    color: #aaa; font-size: 0.9rem;
+  }
+  .history-empty .empty-icon { font-size: 2.5rem; display: block; margin-bottom: 8px; }
+  .hist-table {
+    width: 100%; border-collapse: collapse;
+    font-size: 0.82rem;
+  }
+  .hist-table th {
+    background: var(--green-dark); color: #fff;
+    padding: 10px 12px; text-align: left;
+    font-family: 'Oswald', sans-serif;
+    font-size: 0.78rem; letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+  .hist-table th:first-child { border-radius: 6px 0 0 0; }
+  .hist-table th:last-child { border-radius: 0 6px 0 0; }
+  .hist-table td {
+    padding: 10px 12px;
+    border-bottom: 1px solid #e8f5e8;
+    color: var(--text-dark);
+    vertical-align: middle;
+  }
+  .hist-table tr:last-child td { border-bottom: none; }
+  .hist-table tr:hover td { background: #f0fbf0; }
+  .badge {
+    display: inline-block; padding: 3px 10px;
+    border-radius: 50px; font-size: 0.72rem; font-weight: 600;
+  }
+  .badge-m { background: #d4edda; color: #155724; }
+  .badge-f { background: #fce4ec; color: #880e4f; }
+  .badge-o { background: #fff3cd; color: #856404; }
+
+  /* New card button on dashboard */
+  #main-page { display: none; }
+
+  /* ===== PROFILE MODAL ===== */
+  .modal-overlay {
+    display: none; position: fixed; inset: 0;
+    background: rgba(0,0,0,0.6); z-index: 9999;
+    align-items: center; justify-content: center;
+    padding: 20px;
+  }
+  .modal-overlay.active { display: flex; }
+  .modal-box {
+    background: #fff; border-radius: 18px;
+    width: 100%; max-width: 420px;
+    box-shadow: 0 16px 48px rgba(0,0,0,0.4);
+    overflow: hidden; animation: fadeIn 0.3s ease;
+  }
+  .modal-header {
+    background: linear-gradient(135deg, #0d4f1c, #1a7a30);
+    padding: 20px 24px; display: flex;
+    align-items: center; justify-content: space-between;
+  }
+  .modal-title {
+    color: #fff; font-family: 'Oswald', sans-serif;
+    font-size: 1.1rem; font-weight: 700;
+    letter-spacing: 2px; text-transform: uppercase;
+  }
+  .modal-close {
+    color: rgba(255,255,255,0.8); background: none;
+    border: none; font-size: 1.4rem; cursor: pointer;
+    line-height: 1; padding: 0;
+  }
+  .modal-body { padding: 24px; }
+  .modal-group { margin-bottom: 14px; text-align: left; }
+  .modal-group label {
+    display: block; font-size: 0.72rem; font-weight: 600;
+    color: var(--green-dark); text-transform: uppercase;
+    letter-spacing: 0.5px; margin-bottom: 4px;
+  }
+  .modal-group input {
+    width: 100%; padding: 10px 12px;
+    border: 1.5px solid #b2dfb2; border-radius: 8px;
+    font-size: 0.92rem; background: var(--green-pale);
+    color: var(--text-dark); outline: none; font-family: inherit;
+    box-sizing: border-box;
+  }
+  .modal-group input:focus {
+    border-color: var(--green-mid);
+    box-shadow: 0 0 0 3px rgba(26,122,48,0.15);
+    background: #fff;
+  }
+  .modal-divider {
+    border: none; border-top: 1.5px dashed #c8e6c9;
+    margin: 16px 0;
+  }
+  .modal-section-label {
+    font-size: 0.72rem; font-weight: 700; color: var(--gold-dark);
+    text-transform: uppercase; letter-spacing: 1px;
+    margin-bottom: 12px; display: flex; align-items: center; gap: 6px;
+  }
+  .modal-btn {
+    width: 100%; padding: 11px;
+    background: linear-gradient(135deg, var(--green-dark), var(--green-mid));
+    color: #fff; border: none; border-radius: 50px;
+    font-family: 'Oswald', sans-serif;
+    font-size: 1rem; font-weight: 600;
+    letter-spacing: 2px; text-transform: uppercase;
+    cursor: pointer; margin-top: 4px;
+    box-shadow: 0 4px 18px rgba(13,79,28,0.4);
+    transition: transform 0.15s;
+  }
+  .modal-btn:hover { transform: translateY(-2px); }
+  .modal-msg {
+    font-size: 0.82rem; margin-top: 10px; font-weight: 600;
+    padding: 8px 12px; border-radius: 6px; display: none; text-align: center;
+  }
+  .modal-msg.error { color: #c0392b; background: #fdecea; display: block; }
+  .modal-msg.success { color: #1a7a30; background: #eaf5ea; display: block; }
+
+
+  /* ===== AUTH PAGE ===== */
+  #auth-page {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 20px;
+  }
+  .auth-box {
+    background: rgba(255,255,255,0.97);
+    border-radius: 18px;
+    padding: 36px 32px 28px;
+    width: 100%; max-width: 420px;
+    box-shadow: 0 12px 40px rgba(0,0,0,0.45);
+    border: 1.5px solid rgba(40,167,69,0.3);
+    text-align: center;
+  }
+  .auth-logo {
+    width: 64px; height: 64px;
+    background: linear-gradient(135deg, #f0b429, #c8840b);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Oswald', sans-serif;
+    font-size: 1.05rem; font-weight: 700; color: #fff;
+    margin: 0 auto 10px;
+    box-shadow: 0 4px 14px rgba(240,180,41,0.5);
+    letter-spacing: 1px;
+  }
+  .auth-brand {
+    font-family: 'Oswald', sans-serif;
+    font-size: 1.2rem; font-weight: 700;
+    color: var(--green-dark); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 3px;
+  }
+  .auth-brand span { color: var(--gold-dark); }
+  .auth-subtitle { font-size: 0.78rem; color: #777; margin-bottom: 22px; }
+  .auth-tabs {
+    display: flex; border-radius: 10px; overflow: hidden;
+    border: 1.5px solid #b2dfb2; margin-bottom: 24px;
+  }
+  .auth-tab {
+    flex: 1; padding: 9px;
+    font-family: 'Oswald', sans-serif; font-size: 0.9rem; font-weight: 600;
+    letter-spacing: 1.5px; text-transform: uppercase;
+    cursor: pointer; border: none; background: #f0f0f0; color: #666; transition: all 0.2s;
+  }
+  .auth-tab.active { background: linear-gradient(135deg, var(--green-dark), var(--green-mid)); color: #fff; }
+  .auth-group { text-align: left; margin-bottom: 14px; }
+  .auth-group label {
+    display: block; font-size: 0.72rem; font-weight: 600;
+    color: var(--green-dark); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;
+  }
+  .auth-group input {
+    width: 100%; padding: 10px 12px;
+    border: 1.5px solid #b2dfb2; border-radius: 8px;
+    font-size: 0.92rem; background: var(--green-pale);
+    color: var(--text-dark); outline: none; font-family: inherit;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .auth-group input:focus { border-color: var(--green-mid); box-shadow: 0 0 0 3px rgba(26,122,48,0.15); background: #fff; }
+  .auth-btn {
+    width: 100%; padding: 11px;
+    background: linear-gradient(135deg, var(--green-dark), var(--green-mid));
+    color: #fff; border: none; border-radius: 50px;
+    font-family: 'Oswald', sans-serif; font-size: 1rem; font-weight: 600;
+    letter-spacing: 2px; text-transform: uppercase;
+    cursor: pointer; margin-top: 6px;
+    box-shadow: 0 4px 18px rgba(13,79,28,0.4); transition: transform 0.15s;
+  }
+  .auth-btn:hover { transform: translateY(-2px); }
+  .auth-msg {
+    font-size: 0.82rem; margin-top: 10px; font-weight: 600;
+    padding: 8px 12px; border-radius: 6px; display: none;
+  }
+  .auth-msg.error { color: #c0392b; background: #fdecea; display: block; }
+  .auth-msg.success { color: #1a7a30; background: #eaf5ea; display: block; }
+  .auth-footer { margin-top: 18px; font-size: 0.72rem; color: #999; }
+
+  /* ===== DASHBOARD ===== */
+  #dashboard-page { display: none; }
+  .dash-header {
+    background: rgba(255,255,255,0.97); border-radius: 14px;
+    padding: 16px 22px; margin-bottom: 20px;
+    display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px;
+    box-shadow: 0 4px 18px rgba(0,0,0,0.2); border: 1.5px solid rgba(40,167,69,0.25);
+  }
+  .dash-user-info { display: flex; align-items: center; gap: 12px; }
+  .dash-avatar {
+    width: 46px; height: 46px;
+    background: linear-gradient(135deg, #f0b429, #c8840b);
+    border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    font-family: 'Oswald', sans-serif; font-size: 1rem; font-weight: 700; color: #fff;
+    box-shadow: 0 3px 10px rgba(240,180,41,0.4);
+  }
+  .dash-welcome .greet { font-size: 0.75rem; color: #888; letter-spacing: 1px; text-transform: uppercase; }
+  .dash-welcome .uname { font-size: 1.1rem; font-weight: 700; color: var(--green-dark); font-family: 'Oswald', sans-serif; }
+  .dash-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+  .dash-btn {
+    padding: 8px 18px; border-radius: 50px; border: none;
+    font-family: 'Oswald', sans-serif; font-size: 0.82rem; font-weight: 600;
+    letter-spacing: 1.5px; text-transform: uppercase; cursor: pointer; transition: transform 0.15s;
+  }
+  .dash-btn:hover { transform: translateY(-2px); }
+  .dash-btn.primary { background: linear-gradient(135deg, var(--green-dark), var(--green-mid)); color: #fff; box-shadow: 0 3px 12px rgba(13,79,28,0.35); }
+  .dash-btn.danger  { background: linear-gradient(135deg, #c0392b, #e74c3c); color: #fff; box-shadow: 0 3px 12px rgba(192,57,43,0.35); }
+  .dash-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 14px; margin-bottom: 22px; }
+  .stat-card {
+    background: rgba(255,255,255,0.97); border-radius: 12px; padding: 18px 16px;
+    text-align: center; box-shadow: 0 4px 16px rgba(0,0,0,0.15); border: 1.5px solid rgba(40,167,69,0.2);
+  }
+  .stat-icon { font-size: 1.8rem; margin-bottom: 6px; }
+  .stat-value { font-family: 'Oswald', sans-serif; font-size: 1.8rem; font-weight: 700; color: var(--green-dark); line-height: 1; }
+  .stat-label { font-size: 0.72rem; color: #777; margin-top: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
+  .dash-section-title {
+    color: #e8f5e9; font-family: 'Oswald', sans-serif; font-size: 1rem; font-weight: 600;
+    letter-spacing: 2px; text-transform: uppercase; margin-bottom: 12px;
+  }
+  .history-wrap {
+    background: rgba(255,255,255,0.97); border-radius: 14px; padding: 20px;
+    box-shadow: 0 6px 24px rgba(0,0,0,0.2); border: 1.5px solid rgba(40,167,69,0.25);
+    margin-bottom: 22px; overflow-x: auto;
+  }
+  .history-empty { text-align: center; padding: 32px; color: #aaa; font-size: 0.9rem; }
+  .history-empty .empty-icon { font-size: 2.5rem; display: block; margin-bottom: 8px; }
+  .hist-table { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+  .hist-table th {
+    background: var(--green-dark); color: #fff; padding: 10px 12px; text-align: left;
+    font-family: 'Oswald', sans-serif; font-size: 0.78rem; letter-spacing: 1px; text-transform: uppercase;
+  }
+  .hist-table td { padding: 10px 12px; border-bottom: 1px solid #e8f5e8; color: var(--text-dark); vertical-align: middle; }
+  .hist-table tr:last-child td { border-bottom: none; }
+  .hist-table tr:hover td { background: #f0fbf0; }
+  .badge { display: inline-block; padding: 3px 10px; border-radius: 50px; font-size: 0.72rem; font-weight: 600; }
+  .badge-m { background: #d4edda; color: #155724; }
+  .badge-f { background: #fce4ec; color: #880e4f; }
+  .badge-o { background: #fff3cd; color: #856404; }
+
+  #main-page { display: none; }
+  .back-to-dash {
+    max-width: 900px; margin: 0 auto 14px;
+  }
+  .back-to-dash button {
+    background: rgba(255,255,255,0.15); border: 1.5px solid rgba(255,255,255,0.4);
+    color: #fff; padding: 8px 20px; border-radius: 50px;
+    font-family: 'Oswald', sans-serif; font-size: 0.85rem; letter-spacing: 2px;
+    cursor: pointer; text-transform: uppercase;
+  }
+</style>
+</head>
+<body>
+
+<!-- ========== AUTH PAGE ========== -->
+<div id="auth-page" style="display:none;">
+  <div class="auth-box">
+    <div class="auth-logo">AWO</div>
+    <div class="auth-brand">All Work <span>Online</span></div>
+    <div class="auth-subtitle">AgriStack Farmer ID Card Generator</div>
+    <div class="auth-tabs" id="auth-tabs-bar">
+      <button class="auth-tab active" id="tab-login"  onclick="switchTab('login')">&#128275; Login</button>
+      <button class="auth-tab"        id="tab-signup" onclick="switchTab('signup')">&#128100; Sign Up</button>
+    </div>
+    <div id="forgot-title" style="display:none;margin-bottom:16px;">
+      <h3 style="font-family:Oswald,sans-serif;color:var(--green-dark);font-size:1.1rem;letter-spacing:1px;">&#128273; FORGOT PASSWORD</h3>
+    </div>
+    <!-- LOGIN -->
+    <div id="form-login" style="display:block;">
+      <div class="auth-group"><label>Username / यूज़रनेम</label><input type="text" id="login-user" placeholder="Username dalein..."/></div>
+      <div class="auth-group"><label>Password / पासवर्ड</label><input type="password" id="login-pass" placeholder="Password dalein..." onkeydown="if(event.key==='Enter') doLogin()"/></div>
+      <button class="auth-btn" onclick="doLogin()">&#128275; Login</button>
+      <div style="text-align:right;margin-top:8px;">
+        <a href="#" onclick="switchTab('forgot'); return false;" style="font-size:0.78rem;color:var(--green-mid);text-decoration:none;font-weight:600;">&#128273; Password bhool gaye?</a>
+      </div>
+      <div class="auth-msg" id="login-msg"></div>
+    </div>
+    <!-- SIGNUP -->
+    <div id="form-signup" style="display:none;">
+      <div class="auth-group"><label>Full Name / पूरा नाम</label><input type="text" id="su-name" placeholder="Apna naam dalein..."/></div>
+      <div class="auth-group"><label>Email / ईमेल</label><input type="email" id="su-email" placeholder="Email dalein... (password reset ke liye)"/></div>
+      <div class="auth-group"><label>Mobile No. / मोबाइल</label><input type="tel" id="su-mobile" placeholder="10-digit mobile number" maxlength="10"/></div>
+      <div class="auth-group"><label>Username / यूज़रनेम</label><input type="text" id="su-user" placeholder="Username chunein..."/></div>
+      <div class="auth-group"><label>Password / पासवर्ड</label><input type="password" id="su-pass" placeholder="Password dalein..."/></div>
+      <div class="auth-group"><label>Confirm Password / पासवर्ड दोबारा</label><input type="password" id="su-pass2" placeholder="Password dobara dalein..." onkeydown="if(event.key==='Enter') doSignup()"/></div>
+      <button class="auth-btn" onclick="doSignup()">&#128100; Create Account</button>
+      <div class="auth-msg" id="signup-msg"></div>
+    </div>
+    <!-- FORGOT PASSWORD -->
+    <div id="form-forgot" style="display:none;">
+      <!-- Step 1: Enter username/email -->
+      <div id="forgot-step1">
+        <p style="font-size:0.82rem;color:#555;margin-bottom:16px;text-align:left;">&#128273; Apna registered <strong>Username</strong> ya <strong>Email</strong> dalein — hum aapke email par <strong>OTP code</strong> bhejenge.</p>
+        <div class="auth-group"><label>Username ya Email</label><input type="text" id="forgot-input" placeholder="Username ya Email dalein..."/></div>
+        <button class="auth-btn" onclick="doForgotPassword()">&#128140; OTP Bhejo</button>
+        <div style="text-align:center;margin-top:10px;">
+          <a href="#" onclick="switchTab('login'); return false;" style="font-size:0.78rem;color:var(--green-mid);text-decoration:none;font-weight:600;">&#8592; Login Par Wapas Jao</a>
+        </div>
+      </div>
+      <!-- Step 2: OTP + New Password -->
+      <div id="forgot-step2" style="display:none;">
+        <p style="font-size:0.82rem;color:#27ae60;margin-bottom:14px;text-align:left;">&#128231; OTP aapke email par bhej diya gaya! Neeche dalein.</p>
+        <div class="auth-group"><label>OTP Code (6 digit)</label><input type="text" id="forgot-otp" placeholder="OTP dalein..." maxlength="6" style="letter-spacing:4px;font-size:1.1rem;text-align:center;"/></div>
+        <div class="auth-group"><label>Naya Password</label><input type="password" id="forgot-newpass" placeholder="Naya password dalein..."/></div>
+        <div class="auth-group"><label>Password Confirm Karein</label><input type="password" id="forgot-newpass2" placeholder="Password dobara dalein..."/></div>
+        <button class="auth-btn" onclick="doResetPassword()">&#128274; Password Reset Karein</button>
+        <div style="text-align:center;margin-top:10px;">
+          <a href="#" onclick="backToStep1(); return false;" style="font-size:0.78rem;color:var(--green-mid);text-decoration:none;font-weight:600;">&#8592; Wapas Jao</a>
+        </div>
+      </div>
+      <div class="auth-msg" id="forgot-msg"></div>
+    </div>
+    <div class="auth-footer">&#169; All Work Online | Powered by AgriStack</div>
+  </div>
+</div>
+
+<!-- ========== DASHBOARD ========== -->
+<div id="dashboard-page" style="display:none;">
+<div class="container">
+  <div class="dash-header">
+    <div class="dash-user-info">
+      <div class="dash-avatar" id="dash-avatar-text">U</div>
+      <div class="dash-welcome">
+        <div class="greet">&#128075; Namaste,</div>
+        <div class="uname" id="dash-username">User</div>
+      </div>
+    </div>
+    <div class="dash-actions">
+      <button class="dash-btn primary" onclick="showCardForm()">&#43; Naya Card Banao</button>
+      <button class="dash-btn" style="background:linear-gradient(135deg,#1a5276,#2980b9);color:#fff;box-shadow:0 3px 12px rgba(41,128,185,0.35);" onclick="openProfileModal()">&#9881; Profile</button>
+      <button class="dash-btn danger"  onclick="doLogout()">&#128682; Logout</button>
+    </div>
+  </div>
+  <div class="dash-stats">
+    <div class="stat-card"><div class="stat-icon">&#127806;</div><div class="stat-value" id="stat-total">0</div><div class="stat-label">Total Cards</div></div>
+    <div class="stat-card"><div class="stat-icon">&#128197;</div><div class="stat-value" id="stat-today">0</div><div class="stat-label">Aaj Generate Kiye</div></div>
+    <div class="stat-card"><div class="stat-icon">&#128104;</div><div class="stat-value" id="stat-male">0</div><div class="stat-label">Male Farmers</div></div>
+    <div class="stat-card"><div class="stat-icon">&#128105;</div><div class="stat-value" id="stat-female">0</div><div class="stat-label">Female Farmers</div></div>
+  </div>
+  <div class="dash-section-title">&#128196; Generated Cards History</div>
+  <div class="history-wrap">
+    <div id="history-empty" class="history-empty"><span class="empty-icon">&#127806;</span>Abhi tak koi card generate nahi kiya.<br><strong>"Naya Card Banao"</strong> button dabao!</div>
+    <div id="history-table-wrap" style="display:none;">
+      <table class="hist-table">
+        <thead><tr><th>#</th><th>Farmer Name</th><th>Mobile</th><th>District</th><th>State</th><th>Gender</th><th>Farmer ID</th><th>Date & Time</th><th>Action</th></tr></thead>
+        <tbody id="history-tbody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ========== PROFILE MODAL ========== -->
+<div class="modal-overlay" id="profile-modal">
+  <div class="modal-box">
+    <div class="modal-header">
+      <div class="modal-title">&#9881; Profile Update</div>
+      <button class="modal-close" onclick="closeProfileModal()">&#10005;</button>
+    </div>
+    <div class="modal-body">
+      <div class="modal-group"><label>Full Name / पूरा नाम</label><input type="text" id="prof-name" placeholder="Aapka naam..."/></div>
+      <div class="modal-group"><label>Email / ईमेल</label><input type="email" id="prof-email" placeholder="Email address..."/></div>
+      <div class="modal-group"><label>Mobile No. / मोबाइल</label><input type="tel" id="prof-mobile" placeholder="10-digit number" maxlength="10"/></div>
+      <button class="modal-btn" onclick="doUpdateProfile()">&#128190; Profile Save Karein</button>
+      <hr class="modal-divider"/>
+      <div class="modal-section-label">&#128274; Password Change Karein</div>
+      <div class="modal-group"><label>Purana Password</label><input type="password" id="prof-oldpass" placeholder="Purana password..."/></div>
+      <div class="modal-group"><label>Naya Password</label><input type="password" id="prof-newpass" placeholder="Naya password (min 6 chars)..."/></div>
+      <div class="modal-group"><label>Naya Password Confirm</label><input type="password" id="prof-newpass2" placeholder="Naya password dobara..."/></div>
+      <button class="modal-btn" style="background:linear-gradient(135deg,#7d3c98,#9b59b6);" onclick="doChangePassword()">&#128274; Password Change Karein</button>
+      <div class="modal-msg" id="profile-msg"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ========== CARD FORM PAGE ========== -->
+<div id="main-page" style="display:none;">
+<div class="back-to-dash"><button onclick="backToDashboard()">&#8592; Dashboard Par Wapas Jao</button></div>
+<div style="max-width:900px;margin:0 auto 14px;"><button onclick="backToDashboard()" style="background:rgba(255,255,255,0.15);border:1.5px solid rgba(255,255,255,0.4);color:#fff;padding:8px 20px;border-radius:50px;font-family:Oswald,sans-serif;font-size:0.85rem;letter-spacing:2px;cursor:pointer;text-transform:uppercase;">&#8592; Dashboard Par Wapas Jao</button></div>
+
+<div class="container">
+  <div class="company-header">
+    <div class="company-name">
+      <div class="alw-logo-header">AWO</div>
+      <div class="company-name-text">All Work <span>Online</span></div>
+    </div>
+  </div>
+  <h1 class="page-title">🌾 AgriStack Farmer ID Card</h1>
+  <p class="page-subtitle">फार्मर आईडी कार्ड जनरेटर | Farmer ID Card Generator</p>
+
+  <!-- FORM -->
+  <div class="form-section">
+    <h2>👤 Personal Details / व्यक्तिगत जानकारी</h2>
+    <div class="form-grid">
+      <div class="form-group">
+        <label>Full Name (English)</label>
+        <input type="text" id="name-en" placeholder="e.g. Ramnaresh Chaudhari">
+      </div>
+      <div class="form-group">
+        <label>पूरा नाम (हिंदी)</label>
+        <input type="text" id="name-hi" placeholder="e.g. रामनरेश चौधरी" style="font-family:'Noto Sans Devanagari',sans-serif">
+      </div>
+      <div class="form-group">
+        <label>Date of Birth</label>
+        <input type="date" id="dob">
+      </div>
+      <div class="form-group">
+        <label>Gender / लिंग</label>
+        <select id="gender">
+          <option value="Male">Male / पुरुष</option>
+          <option value="Female">Female / महिला</option>
+          <option value="Other">Other / अन्य</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Caste Category / जाति वर्ग</label>
+        <select id="caste">
+          <option value="General">General / सामान्य</option>
+          <option value="OBC">OBC</option>
+          <option value="SC">SC</option>
+          <option value="ST">ST</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Mobile No. / मोबाइल नं.</label>
+        <input type="tel" id="mobile" placeholder="10-digit number" maxlength="10">
+      </div>
+      <div class="form-group">
+        <label>Aadhar No. / आधार नं.</label>
+        <input type="text" id="aadhar" placeholder="XXXX XXXX XXXX" maxlength="14">
+      </div>
+      <div class="form-group">
+        <label>Farmer ID / फार्मर आईडी</label>
+        <input type="text" id="farmer-id" placeholder="e.g. 36565207294">
+      </div>
+      <div class="form-group">
+        <label>Enrollment ID</label>
+        <input type="text" id="enrollment-id" placeholder="e.g. 10_217_1284_236194_005001">
+      </div>
+      <div class="form-group">
+        <label>Photo / फोटो</label>
+        <div class="photo-upload-area">
+          <input type="file" id="photo-input" accept="image/*" onchange="previewPhoto(event)">
+          <span class="upload-icon">📷</span>
+          <p>Click to upload photo</p>
+          <img id="photo-preview" alt="Photo Preview">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-section">
+    <h2>🏠 Address / पता</h2>
+    <div class="form-grid">
+      <div class="form-group">
+        <label>Ward / Village Name</label>
+        <input type="text" id="village" placeholder="e.g. Jadu Paran, Ward No. 14">
+      </div>
+      <div class="form-group">
+        <label>Sub District / तहसील</label>
+        <input type="text" id="sub-district" placeholder="e.g. Kalyanpur">
+      </div>
+      <div class="form-group">
+        <label>District / जिला</label>
+        <input type="text" id="district" placeholder="e.g. Samastipur">
+      </div>
+      <div class="form-group">
+        <label>State / राज्य</label>
+        <select id="state"><option value="">-- State Chunein --</option><optgroup label="States"><option value="Andhra Pradesh">Andhra Pradesh</option><option value="Arunachal Pradesh">Arunachal Pradesh</option><option value="Assam">Assam</option><option value="Bihar">Bihar</option><option value="Chhattisgarh">Chhattisgarh</option><option value="Goa">Goa</option><option value="Gujarat">Gujarat</option><option value="Haryana">Haryana</option><option value="Himachal Pradesh">Himachal Pradesh</option><option value="Jharkhand">Jharkhand</option><option value="Karnataka">Karnataka</option><option value="Kerala">Kerala</option><option value="Madhya Pradesh">Madhya Pradesh</option><option value="Maharashtra">Maharashtra</option><option value="Manipur">Manipur</option><option value="Meghalaya">Meghalaya</option><option value="Mizoram">Mizoram</option><option value="Nagaland">Nagaland</option><option value="Odisha">Odisha</option><option value="Punjab">Punjab</option><option value="Rajasthan">Rajasthan</option><option value="Sikkim">Sikkim</option><option value="Tamil Nadu">Tamil Nadu</option><option value="Telangana">Telangana</option><option value="Tripura">Tripura</option><option value="Uttar Pradesh">Uttar Pradesh</option><option value="Uttarakhand">Uttarakhand</option><option value="West Bengal">West Bengal</option></optgroup><optgroup label="Union Territories"><option value="Andaman and Nicobar Islands">Andaman &amp; Nicobar Islands</option><option value="Chandigarh">Chandigarh</option><option value="Dadra and Nagar Haveli and Daman and Diu">Dadra &amp; Nagar Haveli, Daman &amp; Diu</option><option value="Delhi">Delhi</option><option value="Jammu and Kashmir">Jammu &amp; Kashmir</option><option value="Ladakh">Ladakh</option><option value="Lakshadweep">Lakshadweep</option><option value="Puducherry">Puducherry</option></optgroup></select>
+      </div>
+      <div class="form-group">
+        <label>PIN Code</label>
+        <input type="text" id="pin" placeholder="e.g. 848302" maxlength="6">
+      </div>
+    </div>
+  </div>
+
+  <div class="form-section">
+    <h2>🌾 Land Ownership Details / भूमि विवरण</h2>
+    <div class="form-grid">
+      <div class="form-group">
+        <label>S.No.</label>
+        <input type="text" id="land-sno" placeholder="e.g. 215">
+      </div>
+      <div class="form-group">
+        <label>Owner Name (Hindi)</label>
+        <input type="text" id="land-owner-hi" placeholder="e.g. राम नरेश चौधरी" style="font-family:'Noto Sans Devanagari',sans-serif">
+      </div>
+      <div class="form-group">
+        <label>Identifier Name & Type</label>
+        <input type="text" id="land-id-type" placeholder="e.g. पिताजी का नाम">
+      </div>
+      <div class="form-group">
+        <label>Owner Type</label>
+        <select id="land-owner-type">
+          <option value="Joint">Joint / संयुक्त</option>
+          <option value="Single">Single / एकल</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Owner Share/Type</label>
+        <input type="text" id="land-share" placeholder="e.g. Equal Share">
+      </div>
+      <div class="form-group">
+        <label>Khasra Total Area</label>
+        <input type="text" id="land-area" placeholder="e.g. 1.33333336">
+      </div>
+      <div class="form-group">
+        <label>Survey Assigned Area</label>
+        <input type="text" id="land-survey" placeholder="e.g. 0.000001">
+      </div>
+    </div>
+  </div>
+
+  <button class="generate-btn" onclick="doGenerate()">✅ Generate Farmer ID Card</button>
+
+  <!-- CARD PREVIEW -->
+  <div id="card-preview-section">
+    <p class="card-preview-title">📋 PVC Card Preview (85.6 × 54 mm)</p>
+    <p class="size-note">Standard Credit Card / PVC Size — Front & Back</p>
+
+    <div class="cards-wrapper">
+
+      <!-- ===== FRONT ===== -->
+      <div class="pvc-card" id="card-front">
+        <!-- decorative overlays via ::before / ::after -->
+
+        <!-- HEADER -->
+        <div class="front-header">
+          <div class="front-logo-area">
+            <div class="logo-emblem">🌿</div>
+            <div class="brand-text">
+              <div class="brand-name">Agri<span>Stack</span></div>
+              <div class="brand-sub">Farmer Registry</div>
+            </div>
+          </div>
+          <div class="front-title-block">
+            <div class="card-type-hi">फार्मर आईडी कार्ड</div>
+            <div class="card-type-en">FARMER IDENTITY CARD</div>
+          </div>
+        </div>
+
+        <!-- GOV STRIP -->
+        <div class="gov-strip">
+          <span class="gov-strip-text">Ministry of Agriculture & Farmers Welfare, Govt. of India</span>
+          <span class="gov-strip-right">AgriStack</span>
+        </div>
+
+        <!-- BODY -->
+        <div class="front-body">
+          <div class="photo-col">
+            <img id="card-photo-img" class="front-photo" alt="Farmer Photo">
+            <div id="card-photo-placeholder" class="front-photo-placeholder">👨‍🌾</div>
+          </div>
+
+          <div class="info-col">
+            <div class="farmer-name-en" id="card-name-en">—</div>
+            <div class="farmer-name-hi" id="card-name-hi">—</div>
+            <div class="f-row"><span class="f-label">DOB :</span><span class="f-val" id="card-dob">—</span></div>
+            <div class="f-row"><span class="f-label">Gender :</span><span class="f-val" id="card-gender">—</span></div>
+            <div class="f-row"><span class="f-label">Age :</span><span class="f-val" id="card-age">—</span></div>
+            <div class="f-row"><span class="f-label">Caste :</span><span class="f-val" id="card-caste">—</span></div>
+            <div class="f-row"><span class="f-label">Mobile :</span><span class="f-val" id="card-mobile">—</span></div>
+            <div class="f-row"><span class="f-label">Aadhar :</span><span class="f-val" id="card-aadhar">—</span></div>
+          </div>
+
+          <div class="qr-col">
+            <div class="front-qr" id="card-qr"></div>
+            <div class="qr-label">Scan for<br>verification</div>
+          </div>
+        </div>
+
+        <!-- FOOTER -->
+        <div class="front-footer">
+          <div>
+            <div class="footer-label">Farmer ID</div>
+            <div class="footer-id" id="card-farmer-id">—</div>
+          </div>
+          <div class="alw-logo-seal">
+            <div class="alw-text">AWO</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== BACK ===== -->
+      <div class="pvc-card" id="card-back">
+
+        <!-- BACK HEADER -->
+        <div class="back-header">
+          <div class="back-header-left">
+            <div class="back-header-label">Farmer Enrollment ID</div>
+            <div class="enrollment-id-val" id="card-enrollment-id">—</div>
+          </div>
+          <div class="back-header-right">
+            <div class="back-brand">Agri<span>Stack</span></div>
+            <div class="back-brand-sub">Govt. of India Initiative</div>
+          </div>
+        </div>
+
+        <!-- BACK BODY -->
+        <div class="back-body">
+          <div class="addr-block">
+            <div class="addr-title">📍 Address / पता</div>
+            <div class="addr-val" id="card-address">—</div>
+          </div>
+
+          <div class="land-title">🌾 Land Ownership Details / भूमि विवरण</div>
+          <table class="land-tbl">
+            <thead>
+              <tr>
+                <th>State</th>
+                <th>District</th>
+                <th>Sub Dist.</th>
+                <th>Village</th>
+                <th>S.No.</th>
+                <th>Owner</th>
+                <th>ID Type</th>
+                <th>Own.Type</th>
+                <th>Share</th>
+                <th>Area</th>
+                <th>Survey</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td id="t-state">—</td>
+                <td id="t-district">—</td>
+                <td id="t-subdistrict">—</td>
+                <td id="t-village">—</td>
+                <td id="t-sno">—</td>
+                <td id="t-owner-hi">—</td>
+                <td id="t-idtype">—</td>
+                <td id="t-ownertype">—</td>
+                <td id="t-share">—</td>
+                <td id="t-area">—</td>
+                <td id="t-survey">—</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="annexure-block">
+            <strong>Consent / सहमति</strong>
+            I give my consent to State & Central Governments to use my information for PM-KISAN, DBT Schemes, PMKSY, PMFBY, Credit Solutions etc. This card is issued under AgriStack initiative.
+          </div>
+        </div>
+
+        <!-- BACK FOOTER -->
+        <div class="back-footer">
+          <div class="back-footer-text">This card is for personal use only and is not a government-issued identity document.</div>
+        </div>
+      </div>
+
+    </div><!-- /cards-wrapper -->
+
+    <button class="download-btn" onclick="downloadCard()">⬇️ Download Card (PDF)</button>
+  </div>
+</div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+<!-- Firebase -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
+  import { getFirestore, doc, getDoc, setDoc, collection, getDocs, addDoc, query, where, orderBy, deleteDoc } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyBexpZGTfu4tNg72CG__EWyRbyoOa-UmGU",
+    authDomain: "card-pvc-print.firebaseapp.com",
+    projectId: "card-pvc-print",
+    storageBucket: "card-pvc-print.firebasestorage.app",
+    messagingSenderId: "957829374901",
+    appId: "1:957829374901:web:e9c424b55125a492e0effc"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db  = getFirestore(app);
+
+  // Expose db and Firestore functions to global scope for use in non-module scripts
+  window._db = db;
+  window._firestore = { doc, getDoc, setDoc, collection, getDocs, addDoc, query, where, orderBy, deleteDoc };
+
+  // ====== Check login on load ======
+  window.addEventListener('DOMContentLoaded', function() {
+    var current = localStorage.getItem('awo_current') || null;
+    if (current) {
+      window._fbGetUserData(current).then(function(userData) {
+        if (userData) {
+          window._currentUserData = userData;
+          showDashboard();
+        } else {
+          localStorage.removeItem('awo_current');
+          document.getElementById('auth-page').style.display = 'flex';
+        }
+      });
+    } else {
+      document.getElementById('auth-page').style.display = 'flex';
+    }
+  });
+</script>
+
+<script>
+// ====== CURRENT USER (localStorage sirf session ke liye) ======
+function getCurrentUser()   { return localStorage.getItem('awo_current') || null; }
+function setCurrentUser(u)  { localStorage.setItem('awo_current', u); }
+function clearCurrentUser() { localStorage.removeItem('awo_current'); }
+
+// ====== FIREBASE HELPERS (async) ======
+window._fbGetUserData = async function(username) {
+  try {
+    var db = window._db;
+    var fs = window._firestore;
+    var snap = await fs.getDoc(fs.doc(db, 'users', username));
+    return snap.exists() ? snap.data() : null;
+  } catch(e) { console.error(e); return null; }
+};
+
+window._fbSaveUser = async function(username, data) {
+  try {
+    var db = window._db;
+    var fs = window._firestore;
+    await fs.setDoc(fs.doc(db, 'users', username), data);
+    return true;
+  } catch(e) { console.error(e); return false; }
+};
+
+window._fbCheckEmailExists = async function(email) {
+  try {
+    var db = window._db;
+    var fs = window._firestore;
+    var q = fs.query(fs.collection(db, 'users'), fs.where('email', '==', email));
+    var snap = await fs.getDocs(q);
+    return !snap.empty;
+  } catch(e) { return false; }
+};
+
+window._fbFindUserByUsernameOrEmail = async function(input) {
+  try {
+    var db = window._db;
+    var fs = window._firestore;
+    // Try username first
+    var snap = await fs.getDoc(fs.doc(db, 'users', input));
+    if (snap.exists()) return { key: input, data: snap.data() };
+    // Try email
+    var q = fs.query(fs.collection(db, 'users'), fs.where('email', '==', input));
+    var qsnap = await fs.getDocs(q);
+    if (!qsnap.empty) {
+      var d = qsnap.docs[0];
+      return { key: d.id, data: d.data() };
+    }
+    return null;
+  } catch(e) { return null; }
+};
+
+window._fbGetCardHistory = async function(username) {
+  try {
+    var db = window._db;
+    var fs = window._firestore;
+    var q = fs.query(fs.collection(db, 'cards'), fs.where('username', '==', username));
+    var snap = await fs.getDocs(q);
+    var docs = snap.docs.map(function(d) { return Object.assign({ _id: d.id }, d.data()); });
+    // Sort by timestamp client-side — asc order
+    docs.sort(function(a,b){ return new Date(a.timestamp)-new Date(b.timestamp); });
+    return docs;
+  } catch(e) { console.error('History load error:', e); return []; }
+};
+
+window._fbUpdatePassword = async function(username, newPassword) {
+  try {
+    var db = window._db;
+    var fs = window._firestore;
+    var snap = await fs.getDoc(fs.doc(db, 'users', username));
+    if (!snap.exists()) return false;
+    var data = snap.data();
+    data.password = newPassword;
+    await fs.setDoc(fs.doc(db, 'users', username), data);
+    return true;
+  } catch(e) { console.error(e); return false; }
+};
+
+window._fbSaveCard = async function(username, card) {
+  try {
+    var db = window._db;
+    var fs = window._firestore;
+    var ref = await fs.addDoc(fs.collection(db, 'cards'), Object.assign({ username: username }, card));
+    return ref.id;
+  } catch(e) { console.error(e); return null; }
+};
+
+// ====== TAB SWITCH ======
+function switchTab(tab) {
+  // Hide all forms
+  document.getElementById('form-login').style.display   = 'none';
+  document.getElementById('form-signup').style.display  = 'none';
+  document.getElementById('form-forgot').style.display  = 'none';
+  document.getElementById('auth-tabs-bar').style.display = (tab==='forgot') ? 'none' : 'flex';
+  document.getElementById('forgot-title').style.display  = (tab==='forgot') ? 'block' : 'none';
+  // Show selected
+  if (tab==='login')  document.getElementById('form-login').style.display  = 'block';
+  if (tab==='signup') document.getElementById('form-signup').style.display = 'block';
+  if (tab==='forgot') document.getElementById('form-forgot').style.display = 'block';
+  // Tab active state
+  if (document.getElementById('tab-login'))  document.getElementById('tab-login').classList.toggle('active',  tab==='login');
+  if (document.getElementById('tab-signup')) document.getElementById('tab-signup').classList.toggle('active', tab==='signup');
+  // Clear messages
+  ['login-msg','signup-msg','forgot-msg'].forEach(function(id){
+    var el=document.getElementById(id); if(el){el.className='auth-msg';el.textContent='';}
+  });
+}
+
+// ====== SIGNUP ======
+async function doSignup() {
+  var name   = document.getElementById('su-name').value.trim();
+  var email  = document.getElementById('su-email').value.trim();
+  var mobile = document.getElementById('su-mobile').value.trim();
+  var user   = document.getElementById('su-user').value.trim();
+  var pass   = document.getElementById('su-pass').value;
+  var pass2  = document.getElementById('su-pass2').value;
+  var msg    = document.getElementById('signup-msg');
+  msg.className = 'auth-msg'; msg.textContent = '';
+
+  if (!name||!email||!mobile||!user||!pass||!pass2) {
+    msg.textContent='❌ Sabhi fields bharna zaroori hai!'; msg.className='auth-msg error'; return;
+  }
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    msg.textContent='❌ Sahi email address dalein!'; msg.className='auth-msg error'; return;
+  }
+  if (!/^[0-9]{10}$/.test(mobile)) {
+    msg.textContent='❌ Mobile 10 digit ka hona chahiye!'; msg.className='auth-msg error'; return;
+  }
+  if (pass!==pass2) {
+    msg.textContent='❌ Dono password match nahi kar rahe!'; msg.className='auth-msg error'; return;
+  }
+  if (pass.length<6) {
+    msg.textContent='❌ Password kam se kam 6 characters ka hona chahiye!'; msg.className='auth-msg error'; return;
+  }
+
+  msg.textContent='⏳ Account ban raha hai...'; msg.className='auth-msg success';
+
+  // Check username exists
+  var existing = await window._fbGetUserData(user);
+  if (existing) {
+    msg.textContent='❌ Yeh username pehle se le liya gaya hai!'; msg.className='auth-msg error'; return;
+  }
+  // Check email exists
+  var emailExists = await window._fbCheckEmailExists(email);
+  if (emailExists) {
+    msg.textContent='❌ Yeh email pehle se registered hai!'; msg.className='auth-msg error'; return;
+  }
+
+  var saved = await window._fbSaveUser(user, {name:name, email:email, mobile:mobile, username:user, password:pass, createdAt:new Date().toISOString()});
+  if (!saved) {
+    msg.textContent='❌ Server error! Dobara try karein.'; msg.className='auth-msg error'; return;
+  }
+  msg.textContent='✅ Account ban gaya! Ab login karein.'; msg.className='auth-msg success';
+  setTimeout(function(){
+    document.getElementById('login-user').value=user;
+    switchTab('login');
+  }, 1500);
+}
+
+// ====== LOGIN ======
+async function doLogin() {
+  var user = document.getElementById('login-user').value.trim();
+  var pass = document.getElementById('login-pass').value;
+  var msg  = document.getElementById('login-msg');
+  msg.className='auth-msg'; msg.textContent='';
+
+  if (!user||!pass) {
+    msg.textContent='❌ Username aur Password dono dalein!'; msg.className='auth-msg error'; return;
+  }
+
+  msg.textContent='⏳ Login ho raha hai...'; msg.className='auth-msg success';
+
+  var userData = await window._fbGetUserData(user);
+  if (!userData || userData.password !== pass) {
+    msg.textContent='❌ Galat Username ya Password!'; msg.className='auth-msg error';
+    document.getElementById('login-pass').value=''; return;
+  }
+  window._currentUserData = userData;
+  setCurrentUser(user);
+  showDashboard();
+}
+
+
+// ====== FORGOT PASSWORD — Step 1: Send OTP ======
+var _resetOTP = null;
+var _resetUsername = null;
+
+async function doForgotPassword() {
+  var input = document.getElementById('forgot-input').value.trim();
+  var msg   = document.getElementById('forgot-msg');
+  msg.className='auth-msg'; msg.textContent='';
+
+  if (!input) {
+    msg.textContent='❌ Username ya Email dalein!'; msg.className='auth-msg error'; return;
+  }
+
+  msg.textContent='⏳ Dhundh raha hai...'; msg.className='auth-msg success';
+
+  var result = await window._fbFindUserByUsernameOrEmail(input);
+  if (!result || !result.data || !result.data.email) {
+    msg.textContent='❌ Koi account nahi mila is username/email se!'; msg.className='auth-msg error'; return;
+  }
+
+  var foundUser = result.data;
+  var foundKey  = result.key;
+
+  // Generate 6-digit OTP
+  _resetOTP = Math.floor(100000 + Math.random() * 900000).toString();
+  _resetUsername = foundKey;
+
+  msg.textContent='⏳ OTP email bheja ja raha hai...'; msg.className='auth-msg success';
+
+  // Send OTP via EmailJS
+  emailjs.init('oxyRIaQ-IoizhZPAG');
+  emailjs.send('service_3gdopdh', 'template_ohms6f9', {
+    to_name:    foundUser.name,
+    email:      foundUser.email,
+    to_email:   foundUser.email,
+    username:   foundKey,
+    otp_code:   _resetOTP,
+    password:   'OTP: ' + _resetOTP,
+    message:    'Aapka Password Reset OTP: ' + _resetOTP + ' (10 minute mein use karein)',
+    reset_link: window.location.href
+  }).then(function(){
+    msg.textContent='✅ OTP aapke email par bhej diya gaya! (' + foundUser.email + ')';
+    msg.className='auth-msg success';
+    // Show Step 2
+    document.getElementById('forgot-step1').style.display='none';
+    document.getElementById('forgot-step2').style.display='block';
+  }).catch(function(err){
+    console.error('EmailJS error:', err);
+    _resetOTP = null; _resetUsername = null;
+    msg.textContent='❌ Email bhejne mein problem aai. Dobara try karein.';
+    msg.className='auth-msg error';
+  });
+}
+
+// ====== FORGOT PASSWORD — Step 2: Verify OTP + Set New Password ======
+async function doResetPassword() {
+  var otp    = document.getElementById('forgot-otp').value.trim();
+  var pass1  = document.getElementById('forgot-newpass').value;
+  var pass2  = document.getElementById('forgot-newpass2').value;
+  var msg    = document.getElementById('forgot-msg');
+  msg.className='auth-msg'; msg.textContent='';
+
+  if (!otp || !pass1 || !pass2) {
+    msg.textContent='❌ Sabhi fields bharna zaroori hai!'; msg.className='auth-msg error'; return;
+  }
+  if (otp !== _resetOTP) {
+    msg.textContent='❌ Galat OTP! Dobara check karein.'; msg.className='auth-msg error'; return;
+  }
+  if (pass1 !== pass2) {
+    msg.textContent='❌ Dono password match nahi kar rahe!'; msg.className='auth-msg error'; return;
+  }
+  if (pass1.length < 6) {
+    msg.textContent='❌ Password kam se kam 6 characters ka hona chahiye!'; msg.className='auth-msg error'; return;
+  }
+
+  msg.textContent='⏳ Password update ho raha hai...'; msg.className='auth-msg success';
+
+  // Update password in Firebase
+  var updated = await window._fbUpdatePassword(_resetUsername, pass1);
+  if (!updated) {
+    msg.textContent='❌ Firebase update mein problem aai. Dobara try karein.'; msg.className='auth-msg error'; return;
+  }
+
+  _resetOTP = null; _resetUsername = null;
+  msg.textContent='✅ Password successfully update ho gaya! Ab login karein.'; msg.className='auth-msg success';
+  setTimeout(function(){
+    document.getElementById('forgot-step1').style.display='block';
+    document.getElementById('forgot-step2').style.display='none';
+    document.getElementById('forgot-input').value='';
+    document.getElementById('forgot-otp').value='';
+    document.getElementById('forgot-newpass').value='';
+    document.getElementById('forgot-newpass2').value='';
+    switchTab('login');
+  }, 2500);
+}
+
+function backToStep1() {
+  _resetOTP = null; _resetUsername = null;
+  document.getElementById('forgot-step1').style.display='block';
+  document.getElementById('forgot-step2').style.display='none';
+  document.getElementById('forgot-msg').className='auth-msg';
+  document.getElementById('forgot-msg').textContent='';
+}
+
+// ====== LOGOUT ======
+function doLogout() {
+  clearCurrentUser();
+  document.getElementById('dashboard-page').style.display='none';
+  document.getElementById('main-page').style.display='none';
+  document.getElementById('auth-page').style.display='flex';
+  document.getElementById('login-pass').value='';
+  document.getElementById('login-msg').className='auth-msg';
+}
+
+// ====== SHOW DASHBOARD ======
+function showDashboard() {
+  var username = getCurrentUser();
+  var userData = window._currentUserData || null;
+  document.getElementById('auth-page').style.display='none';
+  document.getElementById('main-page').style.display='none';
+  document.getElementById('dashboard-page').style.display='block';
+  var displayName = userData ? userData.name : username;
+  document.getElementById('dash-username').textContent = displayName;
+  document.getElementById('dash-avatar-text').textContent = displayName.charAt(0).toUpperCase();
+  renderDashboard(username);
+}
+
+async function renderDashboard(username) {
+  var history = await window._fbGetCardHistory(username);
+  window._cachedHistory = history;
+  var today=new Date().toDateString();
+  document.getElementById('stat-total').textContent=history.length;
+  document.getElementById('stat-today').textContent=history.filter(function(c){return new Date(c.timestamp).toDateString()===today;}).length;
+  document.getElementById('stat-male').textContent=history.filter(function(c){return c.gender==='Male';}).length;
+  document.getElementById('stat-female').textContent=history.filter(function(c){return c.gender==='Female';}).length;
+  var tbody=document.getElementById('history-tbody');
+  tbody.innerHTML='';
+  if (history.length===0) {
+    document.getElementById('history-empty').style.display='block';
+    document.getElementById('history-table-wrap').style.display='none';
+  } else {
+    document.getElementById('history-empty').style.display='none';
+    document.getElementById('history-table-wrap').style.display='block';
+    var rev=[].concat(history).reverse();
+    rev.forEach(function(card,i){
+      var origIdx=history.length-1-i;
+      var gBadge=card.gender==='Male'?'badge-m':card.gender==='Female'?'badge-f':'badge-o';
+      var dt=new Date(card.timestamp);
+      var dtStr=dt.toLocaleDateString('en-IN')+' '+dt.toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'});
+      var tr=document.createElement('tr');
+      tr.innerHTML='<td><strong>'+(history.length-i)+'</strong></td>'
+        +'<td><strong>'+card.nameEn+'</strong><br><small style="color:#666;font-family:Noto Sans Devanagari,sans-serif">'+card.nameHi+'</small></td>'
+        +'<td>'+card.mobile+'</td>'
+        +'<td>'+(card.district||'—')+'</td>'
+        +'<td>'+(card.state||'—')+'</td>'
+        +'<td><span class="badge '+gBadge+'">'+card.gender+'</span></td>'
+        +'<td><small>'+card.farmerId+'</small></td>'
+        +'<td><small>'+dtStr+'</small></td>'
+        +'<td style="white-space:nowrap;">'
+          +'<button class="dash-btn primary" style="padding:4px 10px;font-size:0.68rem;margin:2px;" onclick="viewCard('+origIdx+')">&#128065; View</button>'
+          +'<button class="dash-btn" style="padding:4px 10px;font-size:0.68rem;margin:2px;background:linear-gradient(135deg,#1a5276,#2980b9);color:#fff;" onclick="editCard('+origIdx+')">&#9998; Edit</button>'
+          +'<button class="dash-btn" style="padding:4px 10px;font-size:0.68rem;margin:2px;background:linear-gradient(135deg,#c8840b,#f0b429);color:#fff;" onclick="quickDownload('+origIdx+')">&#11015; PDF</button>'
+          +'<button class="dash-btn danger" style="padding:4px 10px;font-size:0.68rem;margin:2px;" onclick="deleteCard('+origIdx+')">&#128465; Delete</button>'
+        +'</td>';
+      tbody.appendChild(tr);
+    });
+  }
+}
+
+function showCardForm() {
+  // Form reset
+  window._editingCardId = null;
+  window._editingCardIndex = null;
+  var fields=['name-en','name-hi','mobile','aadhar','farmer-id','enrollment-id',
+    'village','sub-district','district','pin','land-sno','land-owner-hi',
+    'land-id-type','land-share','land-area','land-survey'];
+  fields.forEach(function(f){var el=document.getElementById(f);if(el)el.value='';});
+  document.getElementById('dob').value='';
+  document.getElementById('gender').value='Male';
+  document.getElementById('caste').value='General';
+  document.getElementById('state').value='';
+  document.getElementById('land-owner-type').value='Joint';
+  photoDataUrl=null;
+  document.getElementById('photo-preview').style.display='none';
+  document.getElementById('card-preview-section').style.display='none';
+  var errBox=document.getElementById('gen-error-box');
+  if(errBox) errBox.style.display='none';
+  var btn=document.querySelector('.generate-btn');
+  if(btn) btn.textContent='✅ Generate Farmer ID Card';
+  document.getElementById('dashboard-page').style.display='none'; {
+  document.getElementById('main-page').style.display='none';
+  document.getElementById('dashboard-page').style.display='block';
+  // renderDashboard mat bulao — cache se hi dikhao
+  // Agar cache empty hai (pehli baar) tab hi Firebase se load karo
+  if (!window._cachedHistory) {
+    var username=getCurrentUser();
+    if (username) renderDashboard(username);
+  } else {
+    updateDashboardStats(window._cachedHistory);
+  }
+  window.scrollTo(0,0);
+}
+
+// ====== PAGE LOAD — handled by Firebase module script above ======
+
+// ====== CARD FUNCTIONS ======
+var photoDataUrl=null;
+
+function previewPhoto(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = function(ev) {
+      photoDataUrl = ev.target.result;
+      const preview = document.getElementById('photo-preview');
+      preview.src = photoDataUrl;
+      preview.style.display = 'block';
+    };
+    reader.readAsDataURL(file);
+  }
+
+  function calcAge(dob) {
+    if (!dob) return '—';
+    const today = new Date();
+    const birth = new Date(dob);
+    let age = today.getFullYear() - birth.getFullYear();
+    const m = today.getMonth() - birth.getMonth();
+    if (m < 0 || (m === 0 && today.getDate() < birth.getDate())) age--;
+    return age;
+  }
+
+  function formatDate(dob) {
+    if (!dob) return '—';
+    const d = new Date(dob);
+    return d.toLocaleDateString('en-IN', { day: '2-digit', month: '2-digit', year: 'numeric' });
+  }
+
+  function generateCard() {
+    const nameEn = document.getElementById('name-en').value || '—';
+    const nameHi = document.getElementById('name-hi').value || '—';
+    const dob = document.getElementById('dob').value;
+    const gender = document.getElementById('gender').value;
+    const caste = document.getElementById('caste').value;
+    const mobile = document.getElementById('mobile').value || '—';
+    const aadhar = document.getElementById('aadhar').value || '—';
+    const farmerId = document.getElementById('farmer-id').value || '—';
+    const enrollmentId = document.getElementById('enrollment-id').value || '—';
+    const village = document.getElementById('village').value || '';
+    const subDistrict = document.getElementById('sub-district').value || '';
+    const district = document.getElementById('district').value || '';
+    const state = document.getElementById('state').value || '';
+    const pin = document.getElementById('pin').value || '';
+
+    // Front
+    document.getElementById('card-name-en').textContent = nameEn;
+    document.getElementById('card-name-hi').textContent = nameHi;
+    document.getElementById('card-dob').textContent = formatDate(dob);
+    document.getElementById('card-gender').textContent = gender;
+    document.getElementById('card-age').textContent = calcAge(dob);
+    document.getElementById('card-caste').textContent = caste;
+    document.getElementById('card-mobile').textContent = mobile;
+    document.getElementById('card-aadhar').textContent = aadhar;
+    document.getElementById('card-farmer-id').textContent = farmerId;
+
+    // Photo
+    if (photoDataUrl) {
+      const img = document.getElementById('card-photo-img');
+      img.src = photoDataUrl;
+      img.style.display = 'block';
+      document.getElementById('card-photo-placeholder').style.display = 'none';
+    }
+
+    // Address
+    const parts = [village, subDistrict, district, state, pin ? pin : ''].filter(Boolean);
+    document.getElementById('card-address').textContent = parts.join(', ');
+
+    // Enrollment
+    document.getElementById('card-enrollment-id').textContent = enrollmentId;
+
+    // Land table
+    document.getElementById('t-state').textContent = state;
+    document.getElementById('t-district').textContent = district;
+    document.getElementById('t-subdistrict').textContent = subDistrict;
+    document.getElementById('t-village').textContent = village;
+    document.getElementById('t-sno').textContent = document.getElementById('land-sno').value || '—';
+    document.getElementById('t-owner-hi').textContent = document.getElementById('land-owner-hi').value || nameHi;
+    document.getElementById('t-idtype').textContent = document.getElementById('land-id-type').value || '—';
+    document.getElementById('t-ownertype').textContent = document.getElementById('land-owner-type').value;
+    document.getElementById('t-share').textContent = document.getElementById('land-share').value || '—';
+    document.getElementById('t-area').textContent = document.getElementById('land-area').value || '—';
+    document.getElementById('t-survey').textContent = document.getElementById('land-survey').value || '—';
+
+    // QR Code — all details, black, reliable generation
+    const qrDiv = document.getElementById('card-qr');
+    qrDiv.innerHTML = '';
+
+    const address = [village, subDistrict, district, state, pin].filter(Boolean).join(',');
+    const landOwner = document.getElementById('land-owner-hi').value || nameHi;
+    const landArea   = document.getElementById('land-area').value || '';
+    const landSurvey = document.getElementById('land-survey').value || '';
+    const ownerType  = document.getElementById('land-owner-type').value;
+    const share  = document.getElementById('land-share').value || '';
+    const sno    = document.getElementById('land-sno').value || '';
+    const idType = document.getElementById('land-id-type').value || '';
+
+    // Build compact but complete QR data string
+    const qrLines = [
+      'ID:' + farmerId,
+      'ENR:' + enrollmentId,
+      'NM:' + nameEn,
+      'HI:' + nameHi,
+      'DOB:' + formatDate(dob),
+      'GEN:' + gender,
+      'CST:' + caste,
+      'MOB:' + mobile,
+      'ADH:' + aadhar,
+      'ADDR:' + address,
+      'OWN:' + landOwner,
+      'IDT:' + idType,
+      'SNO:' + sno,
+      'OT:' + ownerType,
+      'SHR:' + share,
+      'AREA:' + landArea,
+      'SRV:' + landSurvey
+    ];
+
+    // Try with full data first, fallback to essential data if too long
+    function makeQR(text) {
+      qrDiv.innerHTML = '';
+      return new Promise((resolve) => {
+        try {
+          new QRCode(qrDiv, {
+            text: text,
+            width: 120,
+            height: 120,
+            colorDark: '#000000',
+            colorLight: '#ffffff',
+            correctLevel: QRCode.CorrectLevel.L
+          });
+          resolve(true);
+        } catch(e) {
+          resolve(false);
+        }
+      });
+    }
+
+    const fullText = qrLines.join('|');
+    const essentialText = 'ID:'+farmerId+'|NM:'+nameEn+'|ADH:'+aadhar+'|MOB:'+mobile+'|ADDR:'+address;
+
+    makeQR(fullText).then(ok => {
+      if (!ok || qrDiv.innerHTML === '') {
+        makeQR(essentialText);
+      }
+    });
+
+    const section = document.getElementById('card-preview-section');
+    section.style.display = 'block';
+    section.scrollIntoView({ behavior: 'smooth' });
+  }
+
+  async function downloadCard() {
+    const { jsPDF } = window.jspdf;
+    const cardW = 85.6;
+    const cardH = 54;
+    const margin = 10;
+    const pageW = cardW + margin * 2;
+    const pageH = (cardH * 2) + margin * 3;
+
+    const pdf = new jsPDF({
+      orientation: 'portrait',
+      unit: 'mm',
+      format: [pageW, pageH]
+    });
+
+    const front = document.getElementById('card-front');
+    const back = document.getElementById('card-back');
+
+    // scale:8 = ~300 DPI equivalent — sharp zoom-in quality
+    const frontCanvas = await html2canvas(front, { scale: 8, useCORS: true, backgroundColor: null, logging: false });
+    const backCanvas  = await html2canvas(back,  { scale: 8, useCORS: true, backgroundColor: null, logging: false });
+
+    pdf.addImage(frontCanvas.toDataURL('image/png'), 'PNG', margin, margin,          cardW, cardH);
+    pdf.addImage(backCanvas.toDataURL('image/png'),  'PNG', margin, margin+cardH+margin, cardW, cardH);
+
+    const nameEn = document.getElementById('name-en').value || 'farmer';
+    pdf.save('FarmerID_' + nameEn.replace(/\s+/g, '_') + '.pdf');
+  }
+
+  // Save card to Firebase after generate
+  var _origGen=generateCard;
+  generateCard=function(){_origGen();};
+
+// ======================================================
+//  CLEAN NEW CODE — validation + generate + history
+// ======================================================
+
+function doGenerate() {
+  // --- 1. Validation ---
+  var required = [
+    {id:'name-en',       label:'Full Name (English)'},
+    {id:'name-hi',       label:'पूरा नाम (हिंदी)'},
+    {id:'dob',           label:'Date of Birth'},
+    {id:'mobile',        label:'Mobile No.'},
+    {id:'aadhar',        label:'Aadhar No.'},
+    {id:'farmer-id',     label:'Farmer ID'},
+    {id:'enrollment-id', label:'Enrollment ID'},
+    {id:'village',       label:'Ward / Village'},
+    {id:'sub-district',  label:'Sub District'},
+    {id:'district',      label:'District'},
+    {id:'state',         label:'State'},
+    {id:'pin',           label:'PIN Code'},
+    {id:'land-sno',      label:'S.No.'},
+    {id:'land-owner-hi', label:'Owner Name (Hindi)'},
+    {id:'land-id-type',  label:'Identifier Type'},
+    {id:'land-share',    label:'Owner Share'},
+    {id:'land-area',     label:'Khasra Total Area'},
+    {id:'land-survey',   label:'Survey Area'}
+  ];
+
+  // Reset borders
+  required.forEach(function(f){
+    var el=document.getElementById(f.id);
+    if(el){el.style.border='1.5px solid #b2dfb2'; el.style.boxShadow='';}
+  });
+
+  var missing=[];
+  required.forEach(function(f){
+    var el=document.getElementById(f.id);
+    if(!el||!el.value.trim()){
+      missing.push(f.label);
+      if(el){el.style.border='2px solid #e74c3c'; el.style.boxShadow='0 0 0 3px rgba(231,76,60,0.18)';}
+    }
+  });
+
+  // Show/hide error box
+  var box=document.getElementById('gen-error-box');
+  if(!box){
+    box=document.createElement('div');
+    box.id='gen-error-box';
+    box.style.cssText='background:#fdecea;border:2px solid #e74c3c;border-radius:10px;padding:14px 18px;margin:16px 0;color:#c0392b;font-size:0.88rem;font-weight:600;line-height:1.8;';
+    var btn=document.querySelector('.generate-btn');
+    btn.parentNode.insertBefore(box, btn);
+  }
+  if(missing.length){
+    box.innerHTML='❌ <strong>Yeh fields zaroori hain — pehle bharein:</strong><br>' + missing.map(function(m){return '• '+m;}).join('<br>');
+    box.style.display='block';
+    box.scrollIntoView({behavior:'smooth',block:'center'});
+    return;
+  }
+  box.style.display='none';
+
+  // --- 2. Generate card visuals ---
+  generateCard();
+
+  // --- 3. Edit mode — Firebase update + cache update + dashboard ---
+  var username=getCurrentUser(); if(!username) return;
+
+  if(window._editingCardId) {
+    var idx=window._editingCardIndex;
+    var updatedCard={
+      nameEn:      document.getElementById('name-en').value,
+      nameHi:      document.getElementById('name-hi').value,
+      dob:         document.getElementById('dob').value,
+      gender:      document.getElementById('gender').value,
+      caste:       document.getElementById('caste').value,
+      mobile:      document.getElementById('mobile').value,
+      aadhar:      document.getElementById('aadhar').value,
+      farmerId:    document.getElementById('farmer-id').value,
+      enrollmentId:document.getElementById('enrollment-id').value,
+      village:     document.getElementById('village').value,
+      subDistrict: document.getElementById('sub-district').value,
+      district:    document.getElementById('district').value,
+      state:       document.getElementById('state').value,
+      pin:         document.getElementById('pin').value,
+      landSno:     document.getElementById('land-sno').value,
+      landOwnerHi: document.getElementById('land-owner-hi').value,
+      landIdType:  document.getElementById('land-id-type').value,
+      landOwnerType:document.getElementById('land-owner-type').value,
+      landShare:   document.getElementById('land-share').value,
+      landArea:    document.getElementById('land-area').value,
+      landSurvey:  document.getElementById('land-survey').value,
+      timestamp:   (window._cachedHistory[idx]||{}).timestamp||new Date().toISOString()
+    };
+    // Cache update
+    window._cachedHistory[idx]=Object.assign({_id:window._editingCardId}, updatedCard);
+    // Row update in table
+    var oldRow=document.getElementById('hrow-'+idx);
+    if(oldRow) oldRow.remove();
+    _addHistoryRow(window._cachedHistory[idx], idx);
+    // Firebase update
+    (function(cardId, data, uname){
+      var db=window._db; var fs=window._firestore;
+      fs.setDoc(fs.doc(db,'cards',cardId), Object.assign({username:uname}, data))
+        .catch(function(e){console.error('Update error:',e);});
+    })(window._editingCardId, updatedCard, username);
+    // Reset edit mode
+    window._editingCardId=null;
+    window._editingCardIndex=null;
+    var btn=document.querySelector('.generate-btn');
+    if(btn) btn.textContent='✅ Generate Farmer ID Card';
+    _goToDashboard();
+    return;
+  }
+
+  var card={
+    nameEn:      document.getElementById('name-en').value,
+    nameHi:      document.getElementById('name-hi').value,
+    dob:         document.getElementById('dob').value,
+    gender:      document.getElementById('gender').value,
+    caste:       document.getElementById('caste').value,
+    mobile:      document.getElementById('mobile').value,
+    aadhar:      document.getElementById('aadhar').value,
+    farmerId:    document.getElementById('farmer-id').value,
+    enrollmentId:document.getElementById('enrollment-id').value,
+    village:     document.getElementById('village').value,
+    subDistrict: document.getElementById('sub-district').value,
+    district:    document.getElementById('district').value,
+    state:       document.getElementById('state').value,
+    pin:         document.getElementById('pin').value,
+    landSno:     document.getElementById('land-sno').value,
+    landOwnerHi: document.getElementById('land-owner-hi').value,
+    landIdType:  document.getElementById('land-id-type').value,
+    landOwnerType:document.getElementById('land-owner-type').value,
+    landShare:   document.getElementById('land-share').value,
+    landArea:    document.getElementById('land-area').value,
+    landSurvey:  document.getElementById('land-survey').value,
+    timestamp:   new Date().toISOString()
+  };
+
+  // Duplicate check (same farmerId aaj ka)
+  if(!window._cachedHistory) window._cachedHistory=[];
+  var today=new Date().toDateString();
+  var isDup=window._cachedHistory.some(function(c){
+    return c.farmerId===card.farmerId && new Date(c.timestamp).toDateString()===today && card.farmerId!=='—';
+  });
+  if(isDup) {
+    // Sirf dashboard pe le jao, save mat karo
+    _goToDashboard();
+    return;
+  }
+
+  // Turant cache mein daalo aur dashboard mein dikhao
+  var tempCard=Object.assign({_id:'temp_'+Date.now()}, card);
+  window._cachedHistory.push(tempCard);
+  var newIdx=window._cachedHistory.length-1;
+
+  _goToDashboard();
+  _addHistoryRow(tempCard, newIdx);
+
+  // Background Firebase save
+  window._fbSaveCard(username, card).then(function(ref){
+    if(ref && window._cachedHistory[newIdx]){
+      window._cachedHistory[newIdx]._id = (typeof ref==='string') ? ref : (ref.id||('local_'+Date.now()));
+    }
+  });
+}
+
+function _goToDashboard() {
+  document.getElementById('main-page').style.display='none';
+  document.getElementById('dashboard-page').style.display='block';
+  updateDashboardStats(window._cachedHistory||[]);
+  window.scrollTo(0,0);
+}
+
+function _addHistoryRow(card, idx) {
+  var tbody=document.getElementById('history-tbody');
+  var emptyDiv=document.getElementById('history-empty');
+  var tableWrap=document.getElementById('history-table-wrap');
+  if(!tbody) return;
+  if(emptyDiv)  emptyDiv.style.display='none';
+  if(tableWrap) tableWrap.style.display='block';
+  var badge=card.gender==='Male'?'badge-m':card.gender==='Female'?'badge-f':'badge-o';
+  var dt=new Date(card.timestamp);
+  var dStr=dt.toLocaleDateString('en-IN')+' '+dt.toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'});
+  var total=(window._cachedHistory||[]).length;
+  var tr=document.createElement('tr');
+  tr.id='hrow-'+idx;
+  tr.style.background='#eafbea'; // highlight naya row
+  setTimeout(function(){if(tr)tr.style.background='';},2000);
+  tr.innerHTML=
+    '<td><strong>'+total+'</strong></td>'
+    +'<td><strong>'+card.nameEn+'</strong><br><small style="color:#666;font-family:Noto Sans Devanagari,sans-serif">'+card.nameHi+'</small></td>'
+    +'<td>'+card.mobile+'</td>'
+    +'<td>'+(card.district||'—')+'</td>'
+    +'<td>'+(card.state||'—')+'</td>'
+    +'<td><span class="badge '+badge+'">'+card.gender+'</span></td>'
+    +'<td><small>'+card.farmerId+'</small></td>'
+    +'<td><small>'+dStr+'</small></td>'
+    +'<td style="white-space:nowrap;">'
+      +'<button class="dash-btn primary" style="padding:4px 10px;font-size:0.68rem;margin:2px;" onclick="viewCard('+idx+')">&#128065; View</button> '
+      +'<button class="dash-btn" style="padding:4px 10px;font-size:0.68rem;margin:2px;background:linear-gradient(135deg,#1a5276,#2980b9);color:#fff;" onclick="editCard('+idx+')">&#9998; Edit</button> '
+      +'<button class="dash-btn" style="padding:4px 10px;font-size:0.68rem;margin:2px;background:linear-gradient(135deg,#c8840b,#f0b429);color:#fff;" onclick="quickDownload('+idx+')">&#11015; PDF</button> '
+      +'<button class="dash-btn danger" style="padding:4px 10px;font-size:0.68rem;margin:2px;" onclick="deleteCard('+idx+')">&#128465; Delete</button>'
+    +'</td>';
+  tbody.insertBefore(tr, tbody.firstChild);
+}
+
+function viewCard(index) {
+  var card=(window._cachedHistory||[])[index]; if(!card) return;
+  window._editingCardId=null;
+  _fillForm(card);
+  document.getElementById('dashboard-page').style.display='none';
+  document.getElementById('main-page').style.display='block';
+  setTimeout(function(){generateCard();},200);
+}
+
+function editCard(index) {
+  var card=(window._cachedHistory||[])[index]; if(!card) return;
+  window._editingCardId=card._id||null;
+  window._editingCardIndex=index;
+  _fillForm(card);
+  document.getElementById('dashboard-page').style.display='none';
+  document.getElementById('main-page').style.display='block';
+  // Button label badlo
+  var btn=document.querySelector('.generate-btn');
+  if(btn) btn.textContent='💾 Update Farmer ID Card';
+  setTimeout(function(){generateCard();},200);
+}
+
+function quickDownload(index) {
+  var card=(window._cachedHistory||[])[index]; if(!card) return;
+  _fillForm(card);
+  document.getElementById('main-page').style.display='block';
+  setTimeout(function(){ generateCard(); setTimeout(downloadCard,600); },200);
+}
+
+async function deleteCard(index) {
+  var card=(window._cachedHistory||[])[index];
+  if(!card) return;
+  if(!confirm('⚠️ "'+ card.nameEn +'" ka card delete karna chahte hain?\nYeh action undo nahi hogi!')) return;
+
+  // 1. Row turant hatao (UI instant)
+  var tr=document.getElementById('hrow-'+index);
+  if(tr){ tr.style.transition='opacity 0.3s'; tr.style.opacity='0'; setTimeout(function(){tr.remove();},300); }
+
+  // 2. Cache se hatao
+  window._cachedHistory.splice(index,1);
+  updateDashboardStats(window._cachedHistory);
+
+  // 3. Agar history khali ho gayi
+  if(window._cachedHistory.length===0){
+    document.getElementById('history-empty').style.display='block';
+    document.getElementById('history-table-wrap').style.display='none';
+  }
+
+  // 4. Firebase se delete
+  if(card._id && !card._id.startsWith('temp_')){
+    try {
+      var db=window._db;
+      var fs=window._firestore;
+      await fs.deleteDoc(fs.doc(db,'cards',card._id));
+    } catch(e){ console.error('Delete error:',e); }
+  }
+}
+
+function _fillForm(card) {
+  var m={
+    'name-en':card.nameEn,'name-hi':card.nameHi,'dob':card.dob,
+    'mobile':card.mobile,'aadhar':card.aadhar,'farmer-id':card.farmerId,
+    'enrollment-id':card.enrollmentId,'village':card.village,
+    'sub-district':card.subDistrict,'district':card.district,
+    'state':card.state,'pin':card.pin,'land-sno':card.landSno,
+    'land-owner-hi':card.landOwnerHi,'land-id-type':card.landIdType,
+    'land-share':card.landShare,'land-area':card.landArea,'land-survey':card.landSurvey
+  };
+  Object.keys(m).forEach(function(k){var el=document.getElementById(k);if(el)el.value=m[k]||'';});
+  var g=document.getElementById('gender'); if(g)g.value=card.gender||'Male';
+  var c=document.getElementById('caste'); if(c)c.value=card.caste||'General';
+  var ot=document.getElementById('land-owner-type'); if(ot)ot.value=card.landOwnerType||'Single';
+}
+
+// ====== LIVE DASHBOARD STATS UPDATE ======
+function updateDashboardStats(history) {
+  if (!history) return;
+  var today = new Date().toDateString();
+  document.getElementById('stat-total').textContent = history.length;
+  document.getElementById('stat-today').textContent = history.filter(function(c){ return new Date(c.timestamp).toDateString()===today; }).length;
+  document.getElementById('stat-male').textContent = history.filter(function(c){ return c.gender==='Male'; }).length;
+  document.getElementById('stat-female').textContent = history.filter(function(c){ return c.gender==='Female'; }).length;
+}
+
+// ====== PROFILE MODAL ======
+function openProfileModal() {
+  var userData = window._currentUserData || {};
+  document.getElementById('prof-name').value   = userData.name   || '';
+  document.getElementById('prof-email').value  = userData.email  || '';
+  document.getElementById('prof-mobile').value = userData.mobile || '';
+  document.getElementById('prof-oldpass').value  = '';
+  document.getElementById('prof-newpass').value  = '';
+  document.getElementById('prof-newpass2').value = '';
+  var m = document.getElementById('profile-msg');
+  m.className='modal-msg'; m.textContent='';
+  document.getElementById('profile-modal').classList.add('active');
+}
+
+function closeProfileModal() {
+  document.getElementById('profile-modal').classList.remove('active');
+}
+
+async function doUpdateProfile() {
+  var name   = document.getElementById('prof-name').value.trim();
+  var email  = document.getElementById('prof-email').value.trim();
+  var mobile = document.getElementById('prof-mobile').value.trim();
+  var msg    = document.getElementById('profile-msg');
+  msg.className='modal-msg'; msg.textContent='';
+
+  if (!name||!email||!mobile) {
+    msg.textContent='❌ Sabhi fields bharna zaroori hai!'; msg.className='modal-msg error'; return;
+  }
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    msg.textContent='❌ Sahi email address dalein!'; msg.className='modal-msg error'; return;
+  }
+  if (!/^[0-9]{10}$/.test(mobile)) {
+    msg.textContent='❌ Mobile 10 digit ka hona chahiye!'; msg.className='modal-msg error'; return;
+  }
+  msg.textContent='⏳ Saving...'; msg.className='modal-msg success';
+
+  var username = getCurrentUser();
+  var userData = window._currentUserData || {};
+  userData.name   = name;
+  userData.email  = email;
+  userData.mobile = mobile;
+
+  var saved = await window._fbSaveUser(username, userData);
+  if (!saved) { msg.textContent='❌ Server error! Dobara try karein.'; msg.className='modal-msg error'; return; }
+
+  window._currentUserData = userData;
+  // Update dashboard display
+  document.getElementById('dash-username').textContent = name;
+  document.getElementById('dash-avatar-text').textContent = name.charAt(0).toUpperCase();
+  msg.textContent='✅ Profile update ho gaya!'; msg.className='modal-msg success';
+}
+
+async function doChangePassword() {
+  var oldpass  = document.getElementById('prof-oldpass').value;
+  var newpass  = document.getElementById('prof-newpass').value;
+  var newpass2 = document.getElementById('prof-newpass2').value;
+  var msg      = document.getElementById('profile-msg');
+  msg.className='modal-msg'; msg.textContent='';
+
+  if (!oldpass||!newpass||!newpass2) {
+    msg.textContent='❌ Sabhi password fields bharen!'; msg.className='modal-msg error'; return;
+  }
+  var userData = window._currentUserData || {};
+  if (userData.password !== oldpass) {
+    msg.textContent='❌ Purana password galat hai!'; msg.className='modal-msg error'; return;
+  }
+  if (newpass !== newpass2) {
+    msg.textContent='❌ Dono naye password match nahi kar rahe!'; msg.className='modal-msg error'; return;
+  }
+  if (newpass.length < 6) {
+    msg.textContent='❌ Password kam se kam 6 characters ka hona chahiye!'; msg.className='modal-msg error'; return;
+  }
+  msg.textContent='⏳ Password update ho raha hai...'; msg.className='modal-msg success';
+
+  var username = getCurrentUser();
+  var updated = await window._fbUpdatePassword(username, newpass);
+  if (!updated) { msg.textContent='❌ Server error! Dobara try karein.'; msg.className='modal-msg error'; return; }
+
+  window._currentUserData.password = newpass;
+  document.getElementById('prof-oldpass').value  = '';
+  document.getElementById('prof-newpass').value  = '';
+  document.getElementById('prof-newpass2').value = '';
+  msg.textContent='✅ Password successfully change ho gaya!'; msg.className='modal-msg success';
+}
+</script>
+</body>
+</html>
